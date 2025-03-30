@@ -1,6 +1,6 @@
-function Button({ btnStyle, children }) {
+function Button({ btnstyle, children }) {
   return (
-    <button className={`${btnStyle}`} type="submit">
+    <button className={`${btnstyle}`} type="submit">
       {children}
     </button>
   );

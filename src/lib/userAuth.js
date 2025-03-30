@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export function useAuth() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter(); // For handling redirects
+  const router = useRouter();
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -41,6 +41,7 @@ export function useAuth() {
   // Sign In function
   async function signIn({ email, password }) {
     setLoading(true);
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -54,15 +55,20 @@ export function useAuth() {
 
     setUser(data.user);
     setLoading(false);
-    router.push("/dashboard"); // Redirect after login
-    return { user: data.user };
+    router.push("/dashboard");
   }
 
-  // Sign Out function
+  // ✅ Fix: Properly define the signOut function and return it
   async function signOut() {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Logout failed:", error.message);
+      return { error };
+    }
+
     setUser(null);
-    router.push("/login"); // Redirect to login after logout
+    router.push("/login"); // Redirect user to login page
   }
 
   return { user, loading, signIn, signOut };

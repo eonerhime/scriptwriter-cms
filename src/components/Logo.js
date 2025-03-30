@@ -4,7 +4,7 @@ import favLogo from "../../public/favLogo.png";
 
 function Logo() {
   return (
-    <Link href="/" className="hidden min-[840px]:flex justify-center">
+    <Link href="/" className="flex justify-center">
       <Image
         src={favLogo}
         height={70}
@@ -13,7 +13,7 @@ function Logo() {
         quality={100}
         className="rounded-full"
       />
-      <div className="max-[912px]:hidden flex flex-col justify-end text-xs">
+      <div className="max-[601px]:hidden flex flex-col justify-end text-xs">
         <span>
           Ifeoma <br />
           <b>Emo-Onerhime</b>
