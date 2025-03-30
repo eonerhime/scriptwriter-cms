@@ -1,24 +1,25 @@
 "use client";
 
 import { useLogin } from "@/lib/actions";
-import { useAuth } from "@/lib/userAuth";
 import Link from "next/link";
 import { useState } from "react";
 import LoginButton from "./LoginButton";
 
-function LoginForm() {
+export default function LoginForm() {
   const login = useLogin();
-  const { loading } = useAuth();
   const [email, setEmail] = useState("admin@example.com");
   const [password, setPassword] = useState("pass1234");
   const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setErrorMessage(null);
+    setLoading(true);
 
     if (!email || !password) {
       alert("Please enter both email and password.");
+      setLoading(false);
       return;
     }
 
@@ -79,5 +80,3 @@ function LoginForm() {
     </>
   );
 }
-
-export default LoginForm;
