@@ -1,32 +1,49 @@
 "use client";
 
 import { useLogin } from "@/lib/actions";
+import { signIn } from "@/lib/auth";
 import Link from "next/link";
 import { useState } from "react";
 import LoginButton from "./LoginButton";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  const login = useLogin();
-  const [email, setEmail] = useState("admin@example.com");
-  const [password, setPassword] = useState("pass1234");
-  const [errorMessage, setErrorMessage] = useState(null);
+  const router = useRouter();
+  const [email, setEmail] = useState("emo@example.com");
+  const [password, setPassword] = useState("1234");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setErrorMessage(null);
+    setError("");
     setLoading(true);
 
     if (!email || !password) {
-      alert("Please enter both email and password.");
+      setError("Email and password are required!");
       setLoading(false);
       return;
     }
 
-    const error = await login({ email, password });
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
 
-    if (error) {
-      setErrorMessage(error);
+      if (result?.error) {
+        setError("Invalid email or password");
+        setLoading(false);
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch (err) {
+      console.error("Sign-in error:", err);
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -38,9 +55,7 @@ export default function LoginForm() {
       >
         <h2 className="text-xl font-bold mb-4 text-center">User Login</h2>
 
-        {errorMessage && (
-          <p className="text-accent-950 text-center mb-4">{errorMessage}</p>
-        )}
+        {error && <p className="text-accent-950 text-center mb-4">{error}</p>}
 
         <input
           type="email"

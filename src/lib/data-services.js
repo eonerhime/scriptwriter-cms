@@ -1,5 +1,35 @@
 import supabase from "./supabase";
 
+export async function getUser({ email, password }) {
+
+  if (!email || !password) {
+    console.error("Missing email or password in getUser");
+    return null;
+  }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password,
+  });
+
+
+  if (error) {
+    console.error("Supabase authentication error:", error.message);
+    return null;
+  }
+
+  return data?.user || null;
+}
+
+export async function logout() {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error("Logout failed:", error.message);
+    return { error };
+  }
+}
+
 export async function getHomepage() {
   const { data, error } = await supabase.from("homePage").select("*");
 
