@@ -27,7 +27,7 @@ export async function getUser({ email, password }) {
   try {
     const { data: user, error } = await supabase
       .from("users")
-      .select("id, email, role, avatar_url, password_hash")
+      .select("id, role, email, fullName, password_hash, avatar_url")
       .eq("email", email)
       .single();
 
@@ -40,8 +40,6 @@ export async function getUser({ email, password }) {
     if (!isValidPassword) {
       throw new Error("Invalid credentials");
     }
-
-    console.log("FETCHED USERS", user);
 
     return user;
   } catch (error) {

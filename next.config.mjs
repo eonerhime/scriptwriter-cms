@@ -8,6 +8,7 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com",
       },
     ],
+    domains: ["aavujdgrdxggljccomxv.supabase.co"],
   },
 };
 

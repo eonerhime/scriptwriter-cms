@@ -16,55 +16,62 @@ const authConfig = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "example@email.com",
+        },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials.email || !credentials.password) {
+        const { email, password } = credentials;
+
+        if (!email || !password) {
           throw new Error("Email and password are required!");
         }
 
         const user = await getUser({
-          email: credentials.email,
-          password: credentials.password,
+          email,
+          password,
         });
 
-        if (!user || !user.email) {
-          throw new Error("Invalid credentials");
-        }
+        if (!user) throw new Error("Invalid credentials");
+
+        console.log("User Fetched from DB:", user);
 
         return {
-          id: user.id.toString(),
-          imageURL: user?.user_metadata?.avatar_url,
-          email: user?.email,
-          role: user?.role,
+          id: user.id,
+          role: user.role,
+          email: user.email,
+          fullName: user.fullName,
+          avatar_url: user.avatar_url,
         };
       },
     }),
   ],
   callbacks: {
-    async session({ session, token }) {
-      if (token?.email) {
-        session.user = {
-          id: token.sub,
-          email: token.email,
-          name: token.name,
-          role: token.role || "user",
-        };
-      } else {
-        console.error("Invalid session token:", token);
-      }
-
-      return session;
-    },
     async jwt({ token, user }) {
       if (user) {
-        token.sub = user.id;
-        token.email = user.email;
-        token.name = user.name;
+        token.id = user.id;
         token.role = user.role;
+        token.email = user.email;
+        token.fullName = user.fullName;
+        token.avatar_url = user.avatar_url;
       }
       return token;
+    },
+    async session({ session, token }) {
+      // if (token) {
+      session.user = {
+        id: token.id,
+        role: token.role,
+        email: token.email,
+        fullName: token.fullName,
+        avatar_url: token.avatar_url,
+      };
+      // }
+      console.log("Session User Data:", session.user);
+      return session;
     },
   },
   pages: {
