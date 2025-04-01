@@ -35,9 +35,9 @@ const authConfig = {
 
         return {
           id: user.id.toString(),
-          name: user.name || "User",
-          email: user.email,
-          role: user.role || "user",
+          imageURL: user?.user_metadata?.avatar_url,
+          email: user?.email,
+          role: user?.role,
         };
       },
     }),

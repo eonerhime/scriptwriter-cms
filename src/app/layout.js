@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "next-themes";
 import { Montserrat } from "next/font/google";
+import AuthProvider from "@/components/SessionProvider";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -25,11 +26,13 @@ export default async function RootLayout({ children }) {
       >
         {/* Dark mode support */}
         <ThemeProvider attribute="class" defaultTheme="system">
-          <Header />
-          <main className="flex-1 flex flex-col">
-            <div className="flex-1">{children}</div>
-          </main>
-          <Footer />
+          <AuthProvider>
+            <Header />
+            <main className="flex-1 flex flex-col">
+              <div className="flex-1">{children}</div>
+            </main>
+            <Footer />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

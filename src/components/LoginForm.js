@@ -1,16 +1,15 @@
 "use client";
 
-import { useLogin } from "@/lib/actions";
 import { signIn } from "@/lib/auth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoginButton from "./LoginButton";
-import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("emo@example.com");
-  const [password, setPassword] = useState("1234");
+  const [email, setEmail] = useState("ifeoma.onerhime@gmail.com");
+  const [password, setPassword] = useState("asdf123*");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 

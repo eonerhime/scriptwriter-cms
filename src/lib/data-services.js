@@ -1,24 +1,53 @@
+import bcrypt from "bcryptjs";
 import supabase from "./supabase";
 
-export async function getUser({ email, password }) {
+export async function createUser({ role, email, fullName, password, avatar }) {
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  if (!email || !password) {
-    console.error("Missing email or password in getUser");
-    return null;
-  }
-
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password,
-  });
-
+  const { data, error } = await supabase.from("users").insert([
+    {
+      role,
+      email,
+      fullName,
+      password_hash: hashedPassword,
+      avatar_url: avatar,
+    },
+  ]);
 
   if (error) {
-    console.error("Supabase authentication error:", error.message);
+    console.error("Insert error:", error);
+    return null;
+  } else {
+    console.log("User created:", data);
+    return data;
+  }
+}
+
+export async function getUser({ email, password }) {
+  try {
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("id, email, role, avatar_url, password_hash")
+      .eq("email", email)
+      .single();
+
+    if (error || !user) {
+      throw new Error("User not found");
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password_hash);
+
+    if (!isValidPassword) {
+      throw new Error("Invalid credentials");
+    }
+
+    console.log("FETCHED USERS", user);
+
+    return user;
+  } catch (error) {
+    console.error("Error fetching user:", error.message);
     return null;
   }
-
-  return data?.user || null;
 }
 
 export async function logout() {
