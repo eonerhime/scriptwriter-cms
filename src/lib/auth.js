@@ -37,8 +37,6 @@ const authConfig = {
 
         if (!user) throw new Error("Invalid credentials");
 
-        console.log("User Fetched from DB:", user);
-
         return {
           id: user.id,
           role: user.role,
@@ -58,10 +56,18 @@ const authConfig = {
         token.fullName = user.fullName;
         token.avatar_url = user.avatar_url;
       }
+
+      // Manually expire the session when logging out
+      if (!token?.expires) {
+        token.expires = Date.now();
+      }
+
       return token;
     },
     async session({ session, token }) {
-      // if (token) {
+      if (!token) {
+        return null;
+      }
       session.user = {
         id: token.id,
         role: token.role,
@@ -70,7 +76,6 @@ const authConfig = {
         avatar_url: token.avatar_url,
       };
       // }
-      console.log("Session User Data:", session.user);
       return session;
     },
   },

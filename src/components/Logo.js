@@ -4,7 +4,7 @@ import favLogo from "../../public/favLogo.png";
 
 function Logo() {
   return (
-    <Link href="/" className="flex justify-center">
+    <Link href="/home" className="flex justify-center">
       <Image
         src={favLogo}
         height={70}

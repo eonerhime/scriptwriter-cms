@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoginButton from "./LoginButton";
+import { refreshSession } from "@/actions/refreshSession";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -31,13 +32,15 @@ export default function LoginForm() {
         password,
       });
 
+      await refreshSession();
+
       if (result?.error) {
         setError("Invalid email or password");
         setLoading(false);
         return;
       }
 
-      router.push("/dashboard");
+      router.push("/home");
     } catch (err) {
       console.error("Sign-in error:", err);
       setError("An error occurred. Please try again.");

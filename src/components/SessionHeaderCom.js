@@ -11,7 +11,8 @@ function SessionHeaderCom() {
   console.log("Session data:", session);
 
   return (
-    <div className="flex justify-center items-center gap-8">
+    <div className="flex justify-center items-center gap-4">
+      <DarkModeSwitch />
       {session?.user?.avatar_url && (
         <Image
           src={session.user.avatar_url}
@@ -22,7 +23,6 @@ function SessionHeaderCom() {
           className="rounded-full"
         />
       )}
-      <DarkModeSwitch />
       {session?.user ? <Logout /> : null}
     </div>
   );
