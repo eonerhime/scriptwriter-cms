@@ -24,12 +24,8 @@ export default async function Page({ params }) {
   if (!content) return notFound();
 
   return (
-    // <div className="p-6">
-    //   <h2 className="text-2xl font-semibold capitalize">{slug}</h2>
-    //   <p>{content[slug] || "Page not found"}</p>
-    // </div>
     <div>
-      <h1 className="text-2xl font-bold">{slug.toUpperCase()}</h1>
+      <h1 className="text-2xl pt-4 font-bold">{slug.toUpperCase()}</h1>
       <p>{content}</p>
     </div>
   );
