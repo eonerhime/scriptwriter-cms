@@ -28,8 +28,8 @@ export default function ContentEditor({ slug, initialData }) {
   };
 
   return (
-    <div className="max-w-4xl w-full mx-auto h-auto">
-      <div className="w-full flex flex-col mt-8 p-6 border rounded-md shadow-md bg-primary-500 text-primary-50">
+    <div className="max-w-xl md:max-w-4xl w-full mx-auto h-auto">
+      <div className="w-full flex flex-col mt-8 p-6 border rounded-md shadow-md bg-primary-200 dark:bg-gray-700 text-primary-50">
         <h2 className="text-xl text-center font-semibold mb-4 capitalize">
           Edit {slug}
         </h2>

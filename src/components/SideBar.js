@@ -1,12 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 function SideBar() {
   const pathname = usePathname();
 
-  const areas = [
+  const [isEditOpen, setIsEditOpen] = useState(true);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const editAreas = [
     { name: "Home", path: "/home" },
     { name: "About", path: "/about" },
     { name: "Services", path: "/services" },
@@ -14,29 +19,73 @@ function SideBar() {
     { name: "Portfolio", path: "/portfolio" },
     { name: "Blog", path: "/blog" },
     { name: "Contact", path: "/contact" },
+    { name: "Testimonials", path: "/testimonials" },
+    { name: "Footer", path: "/footer" },
+    { name: "Users", path: "/users" },
+  ];
+
+  const createAreas = [
+    { name: "Portfolio", path: "/create/portfolio" },
+    { name: "Gallery", path: "/create/gallery" },
+    { name: "Blog", path: "/create/blog" },
+    { name: "User", path: "/create/user" },
   ];
 
   return (
-    <div className="w-1/6 ml-8 p-4 border-r">
-      <ul className="space-y-8">
-        {areas.map((area) => (
-          <li key={area.path}>
-            <Link
-              href={area.path}
-              className="hover-text-accent-700 group transition-all duration-300 ease-in-out"
-            >
-              <span
-                className={`${
-                  pathname === area.path &&
-                  "line-through decoration-accent-950 decoration-1"
-                } bg-left-bottom bg-gradient-to-r from-accent-700 to-accent-700 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out`}
+    <div className="w-1/6 mx-8 pt-9 p-4 border-r">
+      {/* Content Editing Section */}
+      <button
+        onClick={() => setIsEditOpen(!isEditOpen)}
+        className="flex items-center justify-between w-full text-lg font-semibold mb-2 p-2 bg-primary-200 dark:bg-gray-700 text-primary-50 rounded-md"
+      >
+        Edit
+        {isEditOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+      </button>
+      {isEditOpen && (
+        <ul className="mb-4">
+          {editAreas.map((area) => (
+            <li key={area.path} className="mb-2">
+              <Link
+                href={area.path}
+                className={`block px-2 py-1 rounded transition ${
+                  pathname === area.path
+                    ? "bg-accent-950 text-primary-50"
+                    : "hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700"
+                }`}
               >
                 {area.name}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Content Creation Section */}
+      <button
+        onClick={() => setIsCreateOpen(!isCreateOpen)}
+        className="flex items-center justify-between w-full text-lg font-semibold mb-2 p-2 bg-primary-200 dark:bg-gray-700 text-primary-50 rounded-md"
+      >
+        Create
+        {isCreateOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+      </button>
+      {isCreateOpen && (
+        <ul>
+          {createAreas.map((area) => (
+            <li key={area.path} className="mb-2">
+              <Link
+                href={area.path}
+                className={`block px-2 py-1 rounded transition ${
+                  pathname === area.path
+                    ? "bg-accent-950 text-primary-50"
+                    : "hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700"
+                }`}
+              >
+                {area.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
