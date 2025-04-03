@@ -7,7 +7,7 @@ function NotFound() {
         ⛔ This page could not be found!
       </h1>
       <Link
-        href="/"
+        href="/home"
         className="inline-block bg-primary-400 uppercase hover:bg-accent-950 text-primary-50 px-6 py-3 text-lg"
       >
         Go back home

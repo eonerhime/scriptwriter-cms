@@ -57,8 +57,8 @@ export async function logout() {
   }
 }
 
-export async function getHomepage() {
-  const { data, error } = await supabase.from("homePage").select("*");
+export async function getHomeContent() {
+  const { data, error } = await supabase.from("home").select("*");
 
   if (error) {
     console.error(error);
