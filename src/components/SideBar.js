@@ -17,7 +17,7 @@ function SideBar() {
   ];
 
   return (
-    <div className="w-1/6 mx-8 p-4 border-r">
+    <div className="w-1/6 ml-8 p-4 border-r">
       <ul className="space-y-8">
         {areas.map((area) => (
           <li key={area.path}>

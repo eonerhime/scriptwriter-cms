@@ -34,9 +34,9 @@ export default async function RootLayout({ children }) {
           <AuthProvider>
             <Header />
             {session ? (
-              <main session={session} className="flex ">
+              <main session={session} className="flex w-full">
                 <SideBar />
-                <div className="">{children}</div>
+                <div className="max-w-6xl w-full">{children}</div>
               </main>
             ) : (
               <main className="flex-1 flex flex-col">

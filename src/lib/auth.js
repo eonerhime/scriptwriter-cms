@@ -84,6 +84,7 @@ const authConfig = {
   },
   session: {
     strategy: "jwt",
+    maxAge: 3600,
   },
 };
 
