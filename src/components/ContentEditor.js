@@ -28,9 +28,9 @@ export default function ContentEditor({ slug, initialData }) {
   };
 
   return (
-    <div className="max-w-xl md:max-w-4xl w-full mx-auto h-auto">
-      <div className="w-full flex flex-col mt-8 p-6 border rounded-md shadow-md bg-primary-200 dark:bg-gray-700 text-primary-50">
-        <h2 className="text-xl text-center font-semibold mb-4 capitalize">
+    <div className="w-full px-6 sm:px-14 max-w-screen-lg mx-auto">
+      <div className="w-full flex flex-col mt-8 p-4 sm:p-6 border rounded-md shadow-md bg-primary-200 dark:bg-gray-700 text-primary-50 overflow-x-auto">
+        <h2 className="text-xl text-center font-semibold mb-4 capitalize break-words">
           Edit {slug}
         </h2>
         {initialData.coverHeader}

@@ -1,11 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function MobileMenu() {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(true);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const editAreas = [
+    { name: "Home", path: "/home" },
+    { name: "About", path: "/about" },
+    { name: "Services", path: "/services" },
+    { name: "Gallery", path: "/gallery" },
+    { name: "Portfolio", path: "/portfolio" },
+    { name: "Blog", path: "/blog" },
+    { name: "Contact", path: "/contact" },
+    { name: "Testimonials", path: "/testimonials" },
+    { name: "Footer", path: "/footer" },
+    { name: "Users", path: "/users" },
+  ];
+
+  const createAreas = [
+    { name: "Portfolio", path: "/create/portfolio" },
+    { name: "Gallery", path: "/create/gallery" },
+    { name: "Blog", path: "/create/blog" },
+    { name: "User", path: "/create/user" },
+  ];
 
   // Close menu when Escape key is pressed
   useEffect(() => {
@@ -24,91 +48,73 @@ export default function MobileMenu() {
       </button>
 
       {/* Mobile Menu */}
+
       <nav
-        className={`absolute top-16 left-0 w-11/12 text-primary-50 z-10 font-semibold  transparent-bg-primary-500 text-primary-50 p-6 space-y-4 shadow-md transition-transform ${
+        className={`absolute top-16 left-0 w-1/2 text-primary-50 z-10 font-semibold bg-primary-500 text-primary-50 p-6 space-y-4 shadow-md transition-transform ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         } md:hidden bg-opacity-25`}
       >
-        <ul className="grid grid-cols-2 items-start gap-6">
-          <li>
-            <Link
-              href="/"
-              onClick={() => setMenuOpen(false)}
-              className="hover:text-accent-700 group  transition-all duration-300 ease-in-out"
-            >
-              <span className="bg-left-bottom bg-gradient-to-r from-accent-700 to-accent-700 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                Home
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/about"
-              onClick={() => setMenuOpen(false)}
-              className="hover:text-accent-700 group  transition-all duration-300 ease-in-out"
-            >
-              <span className="bg-left-bottom bg-gradient-to-r from-accent-700 to-accent-700 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                About
-              </span>
-            </Link>
-          </li>
+        {/* Edit Section */}
+        <button
+          onClick={() => setIsEditOpen(!isEditOpen)}
+          className="flex items-center justify-between w-full text-lg font-semibold p-2 bg-primary-200 dark:bg-gray-700 text-primary-50 rounded-md"
+        >
+          Edit
+          {isEditOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+        </button>
 
-          <li>
-            <Link
-              href="/services"
-              onClick={() => setMenuOpen(false)}
-              className="hover:text-accent-700 group transition-all duration-300 ease-in-out"
-            >
-              <span className="bg-left-bottom bg-gradient-to-r from-accent-700 to-accent-700 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                Services
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/gallery"
-              onClick={() => setMenuOpen(false)}
-              className="hover:text-accent-700 group  transition-all duration-300 ease-in-out"
-            >
-              <span className="bg-left-bottom bg-gradient-to-r from-accent-700 to-accent-700 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                Gallery
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/portfolio"
-              onClick={() => setMenuOpen(false)}
-              className="hover:text-accent-700 group  transition-all duration-300 ease-in-out"
-            >
-              <span className="bg-left-bottom bg-gradient-to-r from-accent-700 to-accent-700 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                Portfolio
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/blog"
-              onClick={() => setMenuOpen(false)}
-              className="hover:text-accent-700 group  transition-all duration-300 ease-in-out"
-            >
-              <span className="bg-left-bottom bg-gradient-to-r from-accent-700 to-accent-700 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                Blog
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/contact"
-              onClick={() => setMenuOpen(false)}
-              className="hover:text-accent-700 group  transition-all duration-300 ease-in-out"
-            >
-              <span className="bg-left-bottom bg-gradient-to-r from-accent-700 to-accent-700 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                Contact
-              </span>
-            </Link>
-          </li>
-        </ul>
+        {isEditOpen && (
+          <ul className="mb-4">
+            {editAreas.map((area) => (
+              <li key={area.path} className="mb-2">
+                <Link
+                  href={area.path}
+                  className={`block px-2 py-1 rounded transition ${
+                    pathname === area.path
+                      ? "bg-accent-950 text-primary-50"
+                      : "hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700"
+                  }`}
+                  onClick={() => setIsSidebarOpen(false)} // Close sidebar on link click (Mobile)
+                >
+                  {area.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* Create Section */}
+        <button
+          onClick={() => setIsCreateOpen(!isCreateOpen)}
+          className="flex items-center justify-between w-full text-lg font-semibold mb-2 p-2 bg-primary-200 dark:bg-gray-700 text-primary-50 rounded-md"
+        >
+          Create
+          {isCreateOpen ? (
+            <ChevronDown size={18} />
+          ) : (
+            <ChevronRight size={18} />
+          )}
+        </button>
+
+        {isCreateOpen && (
+          <ul>
+            {createAreas.map((area) => (
+              <li key={area.path} className="mb-2">
+                <Link
+                  href={area.path}
+                  className={`block px-2 py-1 rounded transition ${
+                    pathname === area.path
+                      ? "bg-accent-950 text-primary-50"
+                      : "hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700"
+                  }`}
+                  onClick={() => setIsSidebarOpen(false)} // Close sidebar on link click (Mobile)
+                >
+                  {area.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </nav>
     </div>
   );

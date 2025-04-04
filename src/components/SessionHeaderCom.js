@@ -8,8 +8,6 @@ import { useSession } from "next-auth/react";
 function SessionHeaderCom() {
   const { data: session } = useSession();
 
-  console.log("Session data:", session);
-
   return (
     <div className="flex justify-center items-center gap-4">
       <DarkModeSwitch />
