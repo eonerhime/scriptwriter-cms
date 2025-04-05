@@ -90,6 +90,17 @@ export async function getAbout() {
   return data;
 }
 
+export async function getServices() {
+  const { data, error } = await supabase.from("services").select("*");
+
+  if (error) {
+    console.error(error);
+    throw new Error("There are no about content");
+  }
+
+  return data;
+}
+
 export async function addBlog({ post }) {
   const { data, error } = await supabase
     .from("blog")
