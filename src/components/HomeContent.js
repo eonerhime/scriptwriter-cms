@@ -5,7 +5,10 @@ import SubmitButton from "./SubmitButton";
 import { useState } from "react";
 
 export default function HomeContent({ slug, initialData }) {
+  // Extract object from array
   const data = initialData[0];
+
+  // Image URL to the Supabase bucket
   const imageBucketUrl =
     "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/profile-images/";
 
@@ -13,6 +16,7 @@ export default function HomeContent({ slug, initialData }) {
   const [coverImageFile, setCoverImageFile] = useState(null);
   const [aboutImageFile, setAboutImageFile] = useState(null);
 
+  // Handle image change for cover image
   const handleImageChangeCover = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -20,6 +24,7 @@ export default function HomeContent({ slug, initialData }) {
     }
   };
 
+  // Handle image change for about image
   const handleImageChangeAbout = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -27,13 +32,14 @@ export default function HomeContent({ slug, initialData }) {
     }
   };
 
+  // Update home content function with slug
   const updateHomeContent = updateHome.bind(null, slug);
 
   return (
     <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
       <form
         action={async (formData) => {
-          // For new cover image
+          // For new cover image, add the bucket URL to the file name and pass it to the form data
           if (coverImageFile) {
             formData.set(
               "coverImage",
@@ -43,7 +49,7 @@ export default function HomeContent({ slug, initialData }) {
             formData.set("coverImage", data.coverImage || "");
           }
 
-          // For new about image
+          // For new about image, add the bucket URL to the file name and pass it to the form data
           if (aboutImageFile) {
             formData.set(
               "aboutImage",
@@ -52,7 +58,7 @@ export default function HomeContent({ slug, initialData }) {
           } else {
             formData.set("aboutImage", data.aboutImage || "");
           }
-
+          // Call the update function with the form data
           await updateHomeContent(formData);
         }}
         className="flex flex-col gap-4"
