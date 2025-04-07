@@ -10,8 +10,12 @@ export default function ContentEditor({ slug, initialData }) {
         <h2 className="text-xl text-center font-semibold mb-4 capitalize break-words">
           Edit {slug} Content
         </h2>
-        {slug === "home" && <HomeContent initialData={initialData} />}
-        {slug === "about" && <AboutContent initialData={initialData} />}
+        {slug === "home" && (
+          <HomeContent slug={slug} initialData={initialData} />
+        )}
+        {slug === "about" && (
+          <AboutContent slug={slug} initialData={initialData} />
+        )}
       </div>
     </div>
   );
