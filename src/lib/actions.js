@@ -19,10 +19,7 @@ export async function createUser({ role, email, fullName, password, avatar }) {
   if (error) {
     console.error("Insert error:", error);
     return null;
-  } else {
-    console.log("User created:", data);
-    return data;
-  }
+  } else return data;
 }
 
 export async function updateHome(slug, formData) {
@@ -52,8 +49,6 @@ export async function updateHome(slug, formData) {
     .match({ id: Number(id) })
     .select();
 
-  console.log("MATCHING ROW:", data);
-
   if (error) {
     console.error("Error updating content:", error);
     return { error };
@@ -62,5 +57,7 @@ export async function updateHome(slug, formData) {
   if (!data) {
     console.warn("No matching row found to update.");
   }
-  return { data };
+  return data;
 }
+
+export async function resetPassword(email, password, passwordCopy) {}
