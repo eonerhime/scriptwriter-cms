@@ -1,5 +1,3 @@
-"use client";
-
 import AboutContent from "./AboutContent";
 import HomeContent from "./HomeContent";
 
