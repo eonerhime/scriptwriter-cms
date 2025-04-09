@@ -1,6 +1,6 @@
 import ContentEditor from "@/components/ContentEditor";
 import {
-  getAbout,
+  getAboutContent,
   getAllBlogContent,
   getHomeContent,
 } from "@/lib/data-services";
@@ -14,7 +14,7 @@ export default async function Page({ params }) {
   // Fetch page content dynamically
   const contentFetchers = {
     home: getHomeContent,
-    about: getAbout,
+    about: getAboutContent,
     blog: getAllBlogContent,
   };
 

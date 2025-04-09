@@ -1,7 +1,9 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import ReactQueryProvider from "@/components/QueryClientProviderWrapper";
 import AuthProvider from "@/components/SessionProvider";
 import SideBar from "@/components/SideBar";
+import { ToastProvider } from "@/components/ToastProvider";
 import { auth } from "@/lib/auth";
 import "@/styles/globals.css";
 import { ThemeProvider } from "next-themes";
@@ -32,18 +34,21 @@ export default async function RootLayout({ children }) {
         {/* Dark mode support */}
         <ThemeProvider attribute="class" defaultTheme="system">
           <AuthProvider>
-            <Header />
-            {session ? (
-              <main session={session} className="flex w-full">
-                <SideBar />
-                <div className="max-w-6xl w-full">{children}</div>
-              </main>
-            ) : (
-              <main className="flex-1 flex flex-col">
-                <div className="flex-1">{children}</div>
-              </main>
-            )}
-            <Footer />
+            <ReactQueryProvider>
+              <Header />
+              {session ? (
+                <main session={session} className="flex w-full">
+                  <SideBar />
+                  <div className="max-w-6xl w-full">{children}</div>
+                </main>
+              ) : (
+                <main className="flex-1 flex flex-col">
+                  <div className="flex-1">{children}</div>
+                </main>
+              )}
+              <Footer />
+              <ToastProvider />
+            </ReactQueryProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
