@@ -1,27 +1,36 @@
+// error.js
 "use client";
 
-import { useEffect } from "react";
+import GoBackButton from "@/components/GoBackButton";
+import { useEffect, useState } from "react";
 
 export default function Error({ error, reset }) {
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
-    console.error("Global Error Caught:", error);
-  }, [error]);
+    // This ensures we only run browser APIs on the client side
+    setIsClient(true);
+  }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-center">
-      <h2 className="text-2xl font-bold text-red-600">
-        Oops! Something went wrong.
-      </h2>
-      <p className="text-gray-600">
-        {error?.message || "An unexpected error occurred."}
-      </p>
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
+      <h1 className="text-4xl font-bold text-red-600 mb-4">
+        Something went wrong!
+      </h1>
+      <p className="text-lg mb-6">We apologize for the inconvenience.</p>
 
-      <button
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        onClick={() => reset()}
-      >
-        Try Again
-      </button>
+      <div className="flex flex-col sm:flex-row gap-4">
+        {/* Go back button */}
+        {isClient && <GoBackButton>Go Back</GoBackButton>}
+
+        {/* Reset button */}
+        <button
+          onClick={reset}
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
     </div>
   );
 }

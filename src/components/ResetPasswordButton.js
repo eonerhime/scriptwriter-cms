@@ -1,6 +1,6 @@
 import SpinnerMini from "./SpinnerMini";
 
-function LoginButton({ loading }) {
+export default function ResetPasswordButton({ loading }) {
   return (
     <button
       type="submit"
@@ -8,9 +8,7 @@ function LoginButton({ loading }) {
          ${loading && "bg-gray-400 text-gray-900 cursor-not-allowed"}`}
       disabled={loading}
     >
-      {loading ? <SpinnerMini /> : "Login"}
+      {loading ? <SpinnerMini /> : "Reset Password"}
     </button>
   );
 }
-
-export default LoginButton;
