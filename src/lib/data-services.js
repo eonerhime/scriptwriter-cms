@@ -46,23 +46,23 @@ export async function getHomeContent() {
   return data;
 }
 
+export async function getAboutContent() {
+  const { data, error } = await supabase.from("about").select("*");
+
+  if (error) {
+    console.error(error);
+    throw new Error("There are no about content");
+  }
+
+  return data;
+}
+
 export async function getAllBlogContent() {
   const { data, error } = await supabase.from("blog").select("*");
 
   if (error) {
     console.error(error);
     throw new Error("There are no blog posted");
-  }
-
-  return data;
-}
-
-export async function getAbout() {
-  const { data, error } = await supabase.from("about").select("*");
-
-  if (error) {
-    console.error(error);
-    throw new Error("There are no about content");
   }
 
   return data;
@@ -115,4 +115,10 @@ export async function getRoles() {
   return data;
 }
 
+async function fetchData() {
+  const data = await getAboutContent();
 
+  console.log("FETCHED ABOUT DATA", data);
+}
+
+// fetchData();

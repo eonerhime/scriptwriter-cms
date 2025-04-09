@@ -1,21 +1,17 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
-
-export default function SubmitButton({ pendingLabel, children }) {
-  const { pending } = useFormStatus();
-
+export default function SubmitButton({ isPending, pendingLabel, children }) {
   return (
     <button
       className={`cursor-pointer uppercase font-semibold p-2 rounded-md 
         ${
-          pending
+          isPending
             ? "disabled-bg-gray-400 disabled-text-gray-700 cursor-not-allowed"
-            : "bg-accent-950 text-gray-900 hover:bg-accent-900"
+            : "bg-accent-950 hover:bg-accent-950"
         } transition-colors`}
-      disabled={pending}
+      disabled={isPending}
     >
-      {pending ? pendingLabel : children}
+      {isPending ? pendingLabel : children}
     </button>
   );
 }

@@ -175,7 +175,7 @@ hover.border-primary-500:hover {
   background-color: var(--color-accent-950);
 }
 .dark .bg-accent-950:hover {
-  background-color: #4b4c4c;
+  background-color: #1e2939;
   color: var(--color-primary-50);
   border: solid 1px #ffffff;
 }

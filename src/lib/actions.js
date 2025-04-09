@@ -22,29 +22,15 @@ export async function createUser({ role, email, fullName, password, avatar }) {
   } else return data;
 }
 
-export async function updateHome(slug, formData) {
+export async function updateContent(slug, formData) {
   const { id, ...updatedFields } = Object.fromEntries(formData.entries());
 
   // Validate input parameters
   if (!slug) throw new Error("Slug is required");
 
-  // Define the table where the content should be updated
-  const tableMap = {
-    home: "home",
-    about: "about",
-    blog: "blog",
-    // Add more mappings as needed
-  };
-
-  const tableName = tableMap[slug];
-
-  if (!tableName) {
-    return { error: s`Invalid slug: ${slug}` };
-  }
-
   // Perform the update query
   const { data, error } = await supabase
-    .from(tableName)
+    .from(slug)
     .update(updatedFields)
     .match({ id: Number(id) })
     .select();
@@ -57,6 +43,7 @@ export async function updateHome(slug, formData) {
   if (!data) {
     console.warn("No matching row found to update.");
   }
+
   return data;
 }
 
