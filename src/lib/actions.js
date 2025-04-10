@@ -44,6 +44,35 @@ export async function updateContent(slug, formData) {
     console.warn("No matching row found to update.");
   }
 
+  console.log("RETURNED DATA:", data);
+
+  return data;
+}
+
+export async function updateMultipleContent(slug, formData) {
+  const { ...updatedFields } = Object.fromEntries(formData.entries());
+
+  // Validate input parameters
+  if (!slug) throw new Error("Slug is required");
+
+  // Perform the update query
+
+  const { data, error } = await supabase
+    .from(slug)
+    .upsert(updatedFields)
+    .select();
+
+  if (error) {
+    console.error("Error updating content:", error);
+    return { error };
+  }
+
+  if (!data) {
+    console.warn("No matching row found to update.");
+  }
+
+  console.log("RETURNED DATA:", data);
+
   return data;
 }
 

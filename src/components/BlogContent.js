@@ -9,7 +9,7 @@ import SubmitButton from "./SubmitButton";
 // Create a client
 const queryClient = new QueryClient();
 
-export default function AboutContent({ slug, initialData }) {
+export default function BlogContent({ slug, initialData }) {
   // Track file objects
   const [imageFile, setImageFile] = useState(null);
   const [pageData, setPageData] = useState(initialData[0]);

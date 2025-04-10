@@ -35,45 +35,17 @@ export async function logout() {
   }
 }
 
-export async function getHomeContent() {
-  const { data, error } = await supabase.from("home").select("*");
+// Handles fetch query for all tables in supabase
+export async function getContent(slug) {
+  const { data, error } = await supabase.from(slug).select("*");
 
   if (error) {
     console.error(error);
-    throw new Error("Home page content could not be loaded");
-  }
-
-  return data;
-}
-
-export async function getAboutContent() {
-  const { data, error } = await supabase.from("about").select("*");
-
-  if (error) {
-    console.error(error);
-    throw new Error("There are no about content");
-  }
-
-  return data;
-}
-
-export async function getAllBlogContent() {
-  const { data, error } = await supabase.from("blog").select("*");
-
-  if (error) {
-    console.error(error);
-    throw new Error("There are no blog posted");
-  }
-
-  return data;
-}
-
-export async function getServices() {
-  const { data, error } = await supabase.from("services").select("*");
-
-  if (error) {
-    console.error(error);
-    throw new Error("There are no about content");
+    throw new Error(
+      `${
+        slug.charAt(0).toUpperCase() + slug.slice(1)
+      } page content could not be loaded`
+    );
   }
 
   return data;
@@ -93,32 +65,11 @@ export async function addBlog({ post }) {
   return data;
 }
 
-export async function getImages() {
-  const { data, error } = await supabase.from("gallery").select("*");
-
-  if (error) {
-    console.error(error);
-    throw new Error("There are no blog posted");
-  }
-
-  return data;
-}
-
-export async function getRoles() {
-  const { data, error } = await supabase.from("roles").select("*");
-
-  if (error) {
-    console.error(error);
-    throw new Error("Could not add blog");
-  }
-
-  return data;
-}
-
+// Test function
 async function fetchData() {
-  const data = await getAboutContent();
+  const data = await getContent("services");
 
-  console.log("FETCHED ABOUT DATA", data);
+  console.log("FETCHED DATA", data);
 }
 
 // fetchData();
