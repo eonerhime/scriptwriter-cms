@@ -288,41 +288,15 @@ export default function HomeContent({ slug, initialData }) {
           </div>
         </div>
 
-        {/* Testimonials */}
-        <div>
-          <div className="flex flex-col gap-2 mb-4">
-            <label htmlFor="testimonialTitle" className="text-sm font-semibold">
-              Testimonial Title
-            </label>
-            <input
-              name="testimonialTitle"
-              id="testimonialTitle"
-              disabled={updateMutation.isPending}
-              defaultValue={pageData.testimonialTitle}
-              className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-            />
-          </div>
-          <div className="flex flex-col gap-2 mb-4">
-            <label htmlFor="testimonialItems" className="text-sm font-semibold">
-              Testimonial Items
-            </label>
-            <input
-              name="testimonialItems"
-              id="testimonialItems"
-              disabled={updateMutation.isPending}
-              defaultValue={pageData.testimonialItems}
-              className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-            />
-          </div>
-        </div>
-
         {/* Form submit button */}
-        <SubmitButton
-          isPending={updateMutation.isPending}
-          pendingLabel="Updating..."
-        >
-          Update Content
-        </SubmitButton>
+        <div className="text-center w-full mt-6">
+          <SubmitButton
+            isPending={updateMutation.isPending}
+            pendingLabel="Updating..."
+          >
+            Update Content
+          </SubmitButton>
+        </div>
       </form>
     </div>
   );

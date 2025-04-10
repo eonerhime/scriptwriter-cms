@@ -2,7 +2,11 @@
 
 import Button from "./Button";
 
-export default function SubmitButton({ isPending, pendingLabel, children }) {
+export default function DeleteContentButton({
+  isPending,
+  pendingLabel,
+  children,
+}) {
   return (
     <Button isPending={isPending} pendingLabel={pendingLabel}>
       {children}

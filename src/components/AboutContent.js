@@ -153,13 +153,15 @@ export default function AboutContent({ slug, initialData }) {
         </div>
 
         {/* Form submit button */}
-        <SubmitButton
-          isPending={updateMutation.isPending}
-          pendingLabel="Updating..."
-          disabled={updateMutation.isPending}
-        >
-          Update Content
-        </SubmitButton>
+        <div className="text-center w-full mt-6">
+          <SubmitButton
+            isPending={updateMutation.isPending}
+            pendingLabel="Updating..."
+            disabled={updateMutation.isPending}
+          >
+            Update Content
+          </SubmitButton>
+        </div>
       </form>
     </div>
   );
