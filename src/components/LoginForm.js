@@ -1,11 +1,12 @@
 "use client";
 
+import { refreshSession } from "@/actions/refreshSession";
 import { signIn } from "@/lib/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LoginButton from "./LoginButton";
-import { refreshSession } from "@/actions/refreshSession";
+import { useSession } from "next-auth/react";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -13,6 +14,13 @@ export default function LoginForm() {
   const [password, setPassword] = useState("asdf123*");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/home");
+    }
+  }, [status, router]);
 
   async function handleSubmit(e) {
     e.preventDefault();
