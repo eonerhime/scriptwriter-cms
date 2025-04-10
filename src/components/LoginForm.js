@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import LoginButton from "./LoginButton";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -14,13 +14,15 @@ export default function LoginForm() {
   const [password, setPassword] = useState("asdf123*");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { status } = useSession();
+  // const { status } = useSession();
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/home");
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (status === "authenticated") {
+  //     router.push("/home");
+  //   } else if (status !== "authenticated") {
+  //     router.push("/login");
+  //   }
+  // }, [status, router]);
 
   async function handleSubmit(e) {
     e.preventDefault();
