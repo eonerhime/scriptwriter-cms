@@ -43,6 +43,7 @@ export async function getContent(slug) {
     .from(slug)
     .select("*")
     .order("id", { ascending: true });
+
   if (error) {
     console.error(error);
     throw new Error(
@@ -71,9 +72,9 @@ export async function addBlog({ post }) {
 
 // Test function
 async function fetchData() {
-  const data = await getContent("services");
+  const data = await getContent("testimonials");
 
   console.log("FETCHED DATA", data);
 }
 
-// fetchData();
+fetchData();

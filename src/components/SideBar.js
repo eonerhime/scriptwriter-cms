@@ -1,17 +1,17 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+// import { ChevronDown, ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-export default function SideBar() {
+export default function SideBarList() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(true);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  // const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   // If not authenticated, don't render the sidebar
   if (!session?.user) {
@@ -31,24 +31,24 @@ export default function SideBar() {
     { name: "Users", path: "/users" },
   ];
 
-  const createAreas = [
-    { name: "Portfolio", path: "/create/portfolio" },
-    { name: "Gallery", path: "/create/gallery" },
-    { name: "Blog", path: "/create/blog" },
-    { name: "User", path: "/create/user" },
-  ];
+  // const createAreas = [
+  //   { name: "Portfolio", path: "/create/portfolio" },
+  //   { name: "Gallery", path: "/create/gallery" },
+  //   { name: "Blog", path: "/create/blog" },
+  //   { name: "User", path: "/create/user" },
+  // ];
 
   {
     return (
       <aside className="hidden min-[601px]:flex flex-col w-1/4 border-r mt-8 ml-6 md:ml-12 pr-4">
         {/* Edit Section */}
-        <button
+        {/* <button
           onClick={() => setIsEditOpen(!isEditOpen)}
           className="flex items-center justify-between w-full text-lg font-semibold mb-2 p-2 bg-primary-200 dark:bg-gray-700 text-primary-50 rounded-md"
         >
           Edit
           {isEditOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-        </button>
+        </button> */}
 
         {isEditOpen && (
           <ul className="mb-4">
@@ -71,7 +71,7 @@ export default function SideBar() {
         )}
 
         {/* Create Section */}
-        <button
+        {/* <button
           onClick={() => setIsCreateOpen(!isCreateOpen)}
           className="flex items-center justify-between w-full text-lg font-semibold mb-2 p-2 bg-primary-200 dark:bg-gray-700 text-primary-50 rounded-md"
         >
@@ -101,7 +101,7 @@ export default function SideBar() {
               </li>
             ))}
           </ul>
-        )}
+        )} */}
       </aside>
     );
   }

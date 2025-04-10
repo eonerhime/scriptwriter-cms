@@ -2,6 +2,7 @@ import AboutContent from "./AboutContent";
 import BlogContent from "./BlogContent";
 import HomeContent from "./HomeContent";
 import ServicesContent from "./ServicesContent";
+import TestimonialsContent from "./TestimonialsContent";
 
 export default function ContentEditor({ slug, initialData }) {
   return (
@@ -23,6 +24,9 @@ export default function ContentEditor({ slug, initialData }) {
         )}
         {slug === "blog" && (
           <BlogContent slug={slug} initialData={initialData} />
+        )}
+        {slug === "testimonials" && (
+          <TestimonialsContent slug={slug} initialData={initialData} />
         )}
       </div>
     </div>

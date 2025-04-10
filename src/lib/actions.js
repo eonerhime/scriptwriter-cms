@@ -49,7 +49,6 @@ export async function updateContent(slug, formData) {
 }
 
 export async function updateMultipleContent(slug, formData) {
-
   try {
     // Extract all form entries
     const entries = Array.from(formData.entries());
@@ -91,14 +90,9 @@ export async function updateMultipleContent(slug, formData) {
 
     // Process updates
     const updatePromises = itemsArray.map((item) => {
-      return supabase
-        .from(slug)
-        .update({
-          serviceOffer: item.serviceOffer,
-          serviceDetails: item.serviceDetails,
-          // Add other fields as needed
-        })
-        .eq("id", item.id);
+      const { id, ...fieldsToUpdate } = item;
+
+      return supabase.from(slug).update(fieldsToUpdate).eq("id", id);
     });
 
     // Execute all updates
