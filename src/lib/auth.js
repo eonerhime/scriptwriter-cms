@@ -6,6 +6,7 @@ import {
   signIn as nextAuthSignIn,
   signOut as nextAuthSignOut,
 } from "next-auth/react";
+import supabase from "./supabase";
 
 const authConfig = {
   providers: [

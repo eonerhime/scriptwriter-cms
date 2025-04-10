@@ -1,3 +1,5 @@
+"use server";
+
 import bcrypt from "bcryptjs";
 import supabase from "./supabase";
 
@@ -37,8 +39,10 @@ export async function logout() {
 
 // Handles fetch query for all tables in supabase
 export async function getContent(slug) {
-  const { data, error } = await supabase.from(slug).select("*");
-
+  const { data, error } = await supabase
+    .from(slug)
+    .select("*")
+    .order("id", { ascending: true });
   if (error) {
     console.error(error);
     throw new Error(

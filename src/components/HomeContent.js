@@ -5,6 +5,8 @@ import { QueryClient, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
+import { useRef } from "react";
+import Image from "next/image";
 
 export default function HomeContent({ slug, initialData }) {
   // Track file objects
@@ -60,11 +62,17 @@ export default function HomeContent({ slug, initialData }) {
   const imageBucketUrl =
     "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/profile-images/";
 
+  const fileInputRef = useRef(null);
+
   // Handle image change for cover image
   const handleImageChangeCover = (e) => {
     const file = e.target.files[0];
     if (file) {
       setCoverImageFile(file);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -73,6 +81,10 @@ export default function HomeContent({ slug, initialData }) {
     const file = e.target.files[0];
     if (file) {
       setAboutImageFile(file);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -123,11 +135,18 @@ export default function HomeContent({ slug, initialData }) {
               {pageData.coverImage &&
                 "(Current image will be used if none selected)"}
             </label>
+            <Image
+              src={pageData.coverImage}
+              alt="Cover Image"
+              width={300}
+              height={300}
+            />
             <div className="w-4/12">
               <input
                 type="file"
                 accept="image/*"
                 name="coverImage"
+                ref={fileInputRef}
                 disabled={updateMutation.isPending}
                 onChange={handleImageChangeCover}
                 className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
@@ -180,11 +199,18 @@ export default function HomeContent({ slug, initialData }) {
               {pageData.aboutImage &&
                 "(Current image will be used if none selected)"}
             </label>
+            <Image
+              src={pageData.aboutImage}
+              alt="About Image"
+              width={300}
+              height={300}
+            />
             <div className="w-4/12">
               <input
                 type="file"
                 accept="image/*"
                 name="aboutImage"
+                ref={fileInputRef}
                 disabled={updateMutation.isPending}
                 onChange={handleImageChangeAbout}
                 className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"

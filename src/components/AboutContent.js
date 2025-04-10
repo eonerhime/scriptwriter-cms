@@ -5,6 +5,8 @@ import { QueryClient, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
+import Image from "next/image";
+import { useRef } from "react";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -54,11 +56,17 @@ export default function AboutContent({ slug, initialData }) {
   const imageBucketUrl =
     "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/profile-images/";
 
+  const fileInputRef = useRef(null);
+
   // Handle image change for about image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -111,11 +119,18 @@ export default function AboutContent({ slug, initialData }) {
             About Image
             {pageData.image && " (Current image will be used if none selected)"}
           </label>
+          <Image
+            src={pageData.image}
+            alt="About Image"
+            width={300}
+            height={300}
+          />
           <div className="w-6/12">
             <input
               type="file"
               accept="image/*"
               name="image"
+              ref={fileInputRef}
               disabled={updateMutation.isPending}
               onChange={handleImageChange}
               className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
