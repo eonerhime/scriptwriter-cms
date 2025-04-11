@@ -77,4 +77,4 @@ async function fetchData() {
   console.log("FETCHED DATA", data);
 }
 
-fetchData();
+// fetchData();
