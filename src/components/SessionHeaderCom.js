@@ -1,17 +1,19 @@
 "use client";
 
-import Image from "next/image";
-import DarkModeSwitch from "./DarkModeSwtch";
-import Logout from "./Logout";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Logout from "./Logout";
 
 function SessionHeaderCom() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (!session || status !== authenticated) {
+    return null;
+  }
 
   return (
-    <div className="flex justify-center items-center gap-4">
-      <DarkModeSwitch />
-      {session?.user?.avatar_url && (
+    <>
+      {session.user.avatar_url && (
         <Image
           src={session.user.avatar_url}
           width={50}
@@ -21,8 +23,8 @@ function SessionHeaderCom() {
           className="rounded-full"
         />
       )}
-      {session?.user ? <Logout /> : null}
-    </div>
+      <Logout />
+    </>
   );
 }
 

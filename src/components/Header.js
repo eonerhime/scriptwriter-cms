@@ -1,3 +1,4 @@
+import DarkModeSwitch from "./DarkModeSwtch";
 import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
 import SessionHeaderCom from "./SessionHeaderCom";
@@ -10,7 +11,10 @@ async function Header() {
           <MobileMenu />
           <Logo />
         </div>
-        <SessionHeaderCom />
+        <div className="flex justify-center items-center gap-4">
+          <DarkModeSwitch />
+          <SessionHeaderCom />
+        </div>
       </div>
     </header>
   );
