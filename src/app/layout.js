@@ -36,12 +36,16 @@ export default async function RootLayout({ children }) {
           <AuthProvider>
             <ReactQueryProvider>
               <Header />
-              {session ? (
+              {/* There's an active user session */}
+              {session && (
                 <main session={session} className="flex w-full">
                   <SideBar />
                   <div className="max-w-6xl w-full">{children}</div>
                 </main>
-              ) : (
+              )}
+
+              {/* There's no active user session */}
+              {!session && (
                 <main className="flex-1 flex flex-col">
                   <div className="flex-1">{children}</div>
                 </main>

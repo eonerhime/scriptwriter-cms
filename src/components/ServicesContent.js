@@ -2,26 +2,18 @@
 
 import { updateMultipleRowsContent } from "@/lib/actions";
 import { QueryClient, useMutation } from "@tanstack/react-query";
-import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
 
-export default function GalleryContent({ slug, initialData }) {
+export default function ServicessContent({ slug, initialData }) {
   const [pageData, setPageData] = useState(initialData);
   const queryClient = new QueryClient();
-  const fileInputRefs = useRef({});
+  // const [services, setServices] = useState([...pageData]);
 
   const updateMutation = useMutation({
     mutationFn: async (formData) => {
       try {
-        // Reset file inputs after submission
-        Object.values(fileInputRefs.current).forEach((ref) => {
-          if (ref) {
-            ref.value = "";
-          }
-        });
-
         const updatedData = await updateMultipleRowsContent(slug, formData);
 
         return updatedData;
@@ -35,7 +27,7 @@ export default function GalleryContent({ slug, initialData }) {
 
       setPageData(updatedData);
 
-      queryClient.invalidateQueries({ queryKey: ["gallery", slug] });
+      queryClient.invalidateQueries({ queryKey: ["services", slug] });
     },
     onError: (error) => {
       toast.error(`Update failed: ${error.message}`);
@@ -49,11 +41,6 @@ export default function GalleryContent({ slug, initialData }) {
     // Add index information to formData
     pageData.forEach((item, index) => {
       formData.append(`_index_${item.id}`, index);
-
-      // Current image is always included in the form data
-      if (item.image) {
-        formData.append(`currentImage_${index}`, item.image);
-      }
     });
 
     updateMutation.mutate(formData);
@@ -61,42 +48,49 @@ export default function GalleryContent({ slug, initialData }) {
 
   return (
     <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {pageData.map((item, index) => (
-          <div key={item.id} className="col-span-1 mb-4">
-            {/* ID included in a consistent format for the server action */}
-            <input type="hidden" name={`id_${index}`} value={item.id} />
+          <div key={item.id} className="mb-4">
+            {/* Hidden ID or marker */}
+            {!item.isNew && (
+              <input type="hidden" name={`id_${index}`} value={item.id} />
+            )}
 
-            <div className="flex flex-col gap-2">
+            {/* Service Offer */}
+            <div className="flex flex-col gap-2 mb-2">
               <label
-                htmlFor={`file_${index}`}
+                htmlFor={`serviceOffer_${index}`}
                 className="text-sm font-semibold"
               >
-                Gallery Image {index + 1}
-                {item.image && " (Current image will be used if none selected)"}
+                Service Offer {item.isNew ? "(new)" : item.id}
               </label>
-              <Image
-                src={item.image || "/placeholder.jpg"}
-                alt="Gallery Image"
-                width={300}
-                height={300}
-                className="rounded-md w-[300px] h-[300px] object-cover"
+              <input
+                name={`serviceOffer_${index}`}
+                id={`serviceOffer_${index}`}
+                defaultValue={item.serviceOffer}
+                className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
-
-              <div className="w-10/12">
-                <input
-                  type="file"
-                  accept="image/*"
-                  id={`file_${index}`}
-                  name={`file_${index}`}
-                  ref={(el) => (fileInputRefs.current[index] = el)}
-                  disabled={updateMutation.isPending}
-                  className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                />
-              </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-4 mb-4">
+            {/* Service Details */}
+            <div className="flex flex-col gap-2 mb-3">
+              <label
+                htmlFor={`serviceDetails_${index}`}
+                className="text-sm font-semibold"
+              >
+                Service {item.isNew ? "(new)" : item.id}
+              </label>
+              <textarea
+                name={`serviceDetails_${index}`}
+                id={`serviceDetails_${index}`}
+                defaultValue={item.serviceDetails}
+                rows={4}
+                className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              />
+            </div>
+
+            {/* Delete Checkbox */}
+            <div className="flex items-center gap-2 mb-4">
               <input
                 type="checkbox"
                 id={`delete_${index}`}
@@ -110,11 +104,16 @@ export default function GalleryContent({ slug, initialData }) {
                 Mark for deletion
               </label>
             </div>
+
+            {/* Divider */}
+            {index < pageData.length - 1 && (
+              <div className="border-1 border-gray-300 mt-12"></div>
+            )}
           </div>
         ))}
 
-        {/* Update button spans full width */}
-        <div className="col-span-full text-center mt-6">
+        {/* Button actions */}
+        <div className="text-center w-full mt-6">
           <SubmitButton
             isPending={updateMutation.isPending}
             pendingLabel="Updating..."
@@ -124,6 +123,16 @@ export default function GalleryContent({ slug, initialData }) {
           </SubmitButton>
         </div>
       </form>
+
+      {/* <div className="text-center w-full mt-6">
+        <AddContentButton
+          onClick={handleAddService}
+          isPending={updateMutation.isPending}
+          pendingLabel="Adding..."
+        >
+          Add Service Fields
+        </AddContentButton>
+      </div> */}
     </div>
   );
 }

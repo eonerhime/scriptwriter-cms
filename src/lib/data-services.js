@@ -72,7 +72,7 @@ export async function addBlog({ post }) {
 
 // Test function
 async function fetchData() {
-  const data = await getContent("testimonials");
+  const data = await getContent("services");
 
   console.log("FETCHED DATA", data);
 }

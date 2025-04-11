@@ -138,12 +138,6 @@ export async function updateMultipleRowsContent(slug, formData) {
         return supabase.from(slug).delete().eq("id", id);
       }
 
-      console.log(
-        `Updating item with ID: ${id}`,
-        "Fields to update:",
-        fieldsToUpdate
-      );
-
       // Only update if we have an ID
       if (id) {
         return supabase.from(slug).update(fieldsToUpdate).eq("id", id);
@@ -163,8 +157,6 @@ export async function updateMultipleRowsContent(slug, formData) {
       .order("id", { ascending: true });
 
     if (error) throw new Error(error.message);
-
-    console.log("RETURNED DATA:", data);
 
     return data;
   } catch (error) {

@@ -58,7 +58,9 @@ export default function GalleryContent({ slug, initialData }) {
     },
     onSuccess: (updatedData) => {
       toast.success("Content updated successfully!");
+
       setPageData(updatedData);
+
       queryClient.invalidateQueries({ queryKey: ["gallery", slug] });
     },
     onError: (error) => {
