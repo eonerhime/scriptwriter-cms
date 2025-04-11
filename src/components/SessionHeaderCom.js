@@ -7,7 +7,7 @@ import Logout from "./Logout";
 function SessionHeaderCom() {
   const { data: session, status } = useSession();
 
-  if (!session || status !== authenticated) {
+  if (!session || status !== "authenticated") {
     return null;
   }
 

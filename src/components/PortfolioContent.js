@@ -8,14 +8,14 @@ import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
 import supabase from "@/lib/supabase";
 
-export default function GalleryContent({ slug, initialData }) {
+export default function PortfolioContent({ slug, initialData }) {
   const [pageData, setPageData] = useState(initialData);
   const queryClient = new QueryClient();
   const [imageFiles, setImageFiles] = useState({});
   const fileInputRefs = useRef({});
 
   const imageBucketUrl =
-    "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/gallery-images/";
+    "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/portfolio-images/";
 
   const updateMutation = useMutation({
     mutationFn: async (formData) => {
@@ -26,7 +26,7 @@ export default function GalleryContent({ slug, initialData }) {
             // Upload file to Supabase storage
             const fileName = file.name;
             const { error: uploadError } = await supabase.storage
-              .from("gallery-images")
+              .from("portfolio-images")
               .upload(fileName, file, {
                 upsert: true, // Overwrite if file exists
               });
@@ -61,7 +61,7 @@ export default function GalleryContent({ slug, initialData }) {
 
       setPageData(updatedData);
 
-      queryClient.invalidateQueries({ queryKey: ["gallery", slug] });
+      queryClient.invalidateQueries({ queryKey: ["portfolio", slug] });
     },
     onError: (error) => {
       toast.error(`Update failed: ${error.message}`);
@@ -98,19 +98,19 @@ export default function GalleryContent({ slug, initialData }) {
 
   return (
     <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
         {pageData.map((item, index) => (
-          <div key={item.id} className="col-span-1 mb-4 flex flex-col">
+          <div key={item.id} className="col-span-1 mb-4">
             {!item.isNew && (
               <input type="hidden" name={`id_${index}`} value={item.id} />
             )}
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <label
                 htmlFor={`image_${index}`}
-                className="text-sm font-semibold mb-1"
+                className="text-sm font-semibold"
               >
-                Gallery Image {item.id}
+                Portfolio Image {item.id}
                 {item.image && " (Current image will be used if none selected)"}
               </label>
               <div className="w-full h-64 relative">
@@ -137,7 +137,7 @@ export default function GalleryContent({ slug, initialData }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-center gap-2 mt-4 mb-4">
               <input
                 type="checkbox"
                 id={`delete_${index}`}
