@@ -1,8 +1,8 @@
 "use server";
 
+import { createClient } from "@supabase/supabase-js";
 import bcrypt from "bcryptjs";
 import supabase from "./supabase";
-import { cookies } from "next/headers";
 
 export async function createUser({ role, email, fullName, password, avatar }) {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,8 +48,11 @@ export async function updateContent(slug, formData) {
   return data;
 }
 
-export async function updateMultipleContent(slug, formData) {
+export async function updateMultipleRowsContent(slug, formData) {
   try {
+    const imageBucketUrl =
+      "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/gallery-images/";
+
     // Extract all form entries
     const entries = Array.from(formData.entries());
 
@@ -65,10 +68,11 @@ export async function updateMultipleContent(slug, formData) {
     // Group form fields by their index
     const itemsByIndex = {};
 
+    // First pass: organize form data by index
     entries.forEach(([key, value]) => {
       if (key.startsWith("_index_")) return;
 
-      // Match name pattern like "serviceOffer_0"
+      // Match name pattern like "image_0", "id_0", "delete_0", "file_0", "currentImage_0"
       const matches = key.match(/(.+)_(\d+)$/);
 
       if (matches) {
@@ -85,18 +89,72 @@ export async function updateMultipleContent(slug, formData) {
       }
     });
 
-    // Convert to array of item objects
-    const itemsArray = Object.values(itemsByIndex);
+    // Process each item and handle file uploads
+    for (const [index, item] of Object.entries(itemsByIndex)) {
+      // Check if we have a file to upload
+      if (item.file && item.file.size > 0) {
+        try {
+          // Generate a unique filename to avoid conflicts
+          const timestamp = Date.now();
+          const originalName = item.file.name;
+          const fileName = `${timestamp}-${originalName.replace(/\s+/g, "-")}`;
 
-    // Process updates
-    const updatePromises = itemsArray.map((item) => {
-      const { id, ...fieldsToUpdate } = item;
+          // Upload file to Supabase storage
+          const { error: uploadError } = await supabase.storage
+            .from("gallery-images")
+            .upload(fileName, item.file, {
+              upsert: true, // Overwrite if file exists
+              cacheControl: "3600",
+            });
 
-      return supabase.from(slug).update(fieldsToUpdate).eq("id", id);
+          if (uploadError) {
+            console.error("Upload error:", uploadError);
+            throw new Error(`File upload failed: ${uploadError.message}`);
+          }
+
+          // Set the new image URL for database update
+          item.image = `${imageBucketUrl}${fileName}`;
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          throw new Error(`File upload error: ${error.message}`);
+        }
+      } else if (item.currentImage) {
+        // Use current image if no new file is uploaded
+        item.image = item.currentImage;
+      }
+
+      // Clean up temporary fields that shouldn't go to the database
+      delete item.file;
+      delete item.currentImage;
+    }
+
+    // Process deletions and updates
+    const promises = Object.values(itemsByIndex).map(async (item) => {
+      const { id, delete: shouldDelete, ...fieldsToUpdate } = item;
+
+      // Handle deletion if marked
+      if (shouldDelete === "on") {
+        console.log(`Deleting item with ID: ${id}`);
+        return supabase.from(slug).delete().eq("id", id);
+      }
+
+      console.log(
+        `Updating item with ID: ${id}`,
+        "Fields to update:",
+        fieldsToUpdate
+      );
+
+      // Only update if we have an ID
+      if (id) {
+        return supabase.from(slug).update(fieldsToUpdate).eq("id", id);
+      }
+
+      // Handle new items if needed
+      return null;
     });
 
-    // Execute all updates
-    await Promise.all(updatePromises);
+    // Execute all operations
+    await Promise.all(promises.filter((p) => p !== null));
 
     // Fetch and return updated data
     const { data, error } = await supabase
@@ -105,6 +163,8 @@ export async function updateMultipleContent(slug, formData) {
       .order("id", { ascending: true });
 
     if (error) throw new Error(error.message);
+
+    console.log("RETURNED DATA:", data);
 
     return data;
   } catch (error) {

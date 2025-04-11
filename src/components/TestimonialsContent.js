@@ -1,6 +1,6 @@
 "use client";
 
-import { updateMultipleContent } from "@/lib/actions";
+import { updateMultipleRowsContent } from "@/lib/actions";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -14,7 +14,7 @@ export default function TestimonialsContent({ slug, initialData }) {
   const updateMutation = useMutation({
     mutationFn: async (formData) => {
       try {
-        const updatedData = await updateMultipleContent(slug, formData);
+        const updatedData = await updateMultipleRowsContent(slug, formData);
 
         return updatedData;
       } catch (error) {

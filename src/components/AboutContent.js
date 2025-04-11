@@ -15,6 +15,7 @@ export default function AboutContent({ slug, initialData }) {
   // Track file objects
   const [imageFile, setImageFile] = useState(null);
   const [pageData, setPageData] = useState(initialData[0]);
+  const fileInputRef = useRef(null);
 
   // Updated useMutation hook that integrates with your form action
   const updateMutation = useMutation({
@@ -27,6 +28,9 @@ export default function AboutContent({ slug, initialData }) {
           formData.set("image", pageData.image || "");
         }
 
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
         // Call the server action with the form data
         const updatedData = await updateContent(slug, formData);
 
@@ -56,17 +60,11 @@ export default function AboutContent({ slug, initialData }) {
   const imageBucketUrl =
     "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/profile-images/";
 
-  const fileInputRef = useRef(null);
-
   // Handle image change for about image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
     }
   };
 

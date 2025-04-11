@@ -6,24 +6,50 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
+import supabase from "@/lib/supabase";
 
 export default function GalleryContent({ slug, initialData }) {
   const [pageData, setPageData] = useState(initialData);
   const queryClient = new QueryClient();
+  const [imageFiles, setImageFiles] = useState({});
   const fileInputRefs = useRef({});
+
+  const imageBucketUrl =
+    "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/gallery-images/";
 
   const updateMutation = useMutation({
     mutationFn: async (formData) => {
       try {
-        // Reset file inputs after submission
+        // Handle file uploads first
+        for (const [index, file] of Object.entries(imageFiles)) {
+          if (file) {
+            // Upload file to Supabase storage
+            const fileName = file.name;
+            const { error: uploadError } = await supabase.storage
+              .from("gallery-images")
+              .upload(fileName, file, {
+                upsert: true, // Overwrite if file exists
+              });
+
+            if (uploadError)
+              throw new Error(`File upload failed: ${uploadError.message}`);
+
+            // Set the image URL in formData
+            formData.set(`image_${index}`, `${imageBucketUrl}${fileName}`);
+          }
+        }
+
+        // Reset file inputs
         Object.values(fileInputRefs.current).forEach((ref) => {
           if (ref) {
             ref.value = "";
           }
         });
 
-        const updatedData = await updateMultipleRowsContent(slug, formData);
+        // Clear image files state
+        setImageFiles({});
 
+        const updatedData = await updateMultipleRowsContent(slug, formData);
         return updatedData;
       } catch (error) {
         console.error("Error in mutation:", error);
@@ -32,15 +58,24 @@ export default function GalleryContent({ slug, initialData }) {
     },
     onSuccess: (updatedData) => {
       toast.success("Content updated successfully!");
-
       setPageData(updatedData);
-
       queryClient.invalidateQueries({ queryKey: ["gallery", slug] });
     },
     onError: (error) => {
       toast.error(`Update failed: ${error.message}`);
     },
   });
+
+  // Handle image change for specific index
+  const handleImageChange = (e, index) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFiles((prev) => ({
+        ...prev,
+        [index]: file,
+      }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,9 +85,9 @@ export default function GalleryContent({ slug, initialData }) {
     pageData.forEach((item, index) => {
       formData.append(`_index_${item.id}`, index);
 
-      // Current image is always included in the form data
-      if (item.image) {
-        formData.append(`currentImage_${index}`, item.image);
+      // Add current image if no new image is selected
+      if (!imageFiles[index] && item.image) {
+        formData.set(`image_${index}`, item.image);
       }
     });
 
@@ -64,19 +99,20 @@ export default function GalleryContent({ slug, initialData }) {
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
         {pageData.map((item, index) => (
           <div key={item.id} className="col-span-1 mb-4">
-            {/* ID included in a consistent format for the server action */}
-            <input type="hidden" name={`id_${index}`} value={item.id} />
+            {!item.isNew && (
+              <input type="hidden" name={`id_${index}`} value={item.id} />
+            )}
 
             <div className="flex flex-col gap-2">
               <label
-                htmlFor={`file_${index}`}
+                htmlFor={`image_${index}`}
                 className="text-sm font-semibold"
               >
-                Gallery Image {index + 1}
+                Gallery Image {item.id}
                 {item.image && " (Current image will be used if none selected)"}
               </label>
               <Image
-                src={item.image || "/placeholder.jpg"}
+                src={item.image}
                 alt="Gallery Image"
                 width={300}
                 height={300}
@@ -91,6 +127,7 @@ export default function GalleryContent({ slug, initialData }) {
                   name={`file_${index}`}
                   ref={(el) => (fileInputRefs.current[index] = el)}
                   disabled={updateMutation.isPending}
+                  onChange={(e) => handleImageChange(e, index)}
                   className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                 />
               </div>

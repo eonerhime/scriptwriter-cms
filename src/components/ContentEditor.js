@@ -1,5 +1,6 @@
 import AboutContent from "./AboutContent";
 import BlogContent from "./BlogContent";
+import GalleryContent from "./GalleryContent";
 import HomeContent from "./HomeContent";
 import ServicesContent from "./ServicesContent";
 import TestimonialsContent from "./TestimonialsContent";
@@ -21,6 +22,9 @@ export default function ContentEditor({ slug, initialData }) {
         )}
         {slug === "services" && (
           <ServicesContent slug={slug} initialData={initialData} />
+        )}
+        {slug === "gallery" && (
+          <GalleryContent slug={slug} initialData={initialData} />
         )}
         {slug === "blog" && (
           <BlogContent slug={slug} initialData={initialData} />
