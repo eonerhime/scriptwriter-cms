@@ -98,7 +98,7 @@ export default function PortfolioContent({ slug, initialData }) {
 
   return (
     <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-8">
         {pageData.map((item, index) => (
           <div key={item.id} className="col-span-1 mb-4">
             {!item.isNew && (
