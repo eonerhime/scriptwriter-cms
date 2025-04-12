@@ -1,6 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function SideBarItems({ initialPathname }) {
+  const pathname = usePathname();
+  const currentPathname =
+    initialPathname === "home" ? initialPathname : pathname;
+
+  console.log("INITIAL PATHNAME:", initialPathname);
+  console.log("CURRENT PATHNAME:", pathname);
+
   const editAreas = [
     { name: "Home", path: "/home" },
     { name: "About", path: "/about" },
@@ -8,9 +18,8 @@ export function SideBarItems({ initialPathname }) {
     { name: "Gallery", path: "/gallery" },
     { name: "Portfolio", path: "/portfolio" },
     { name: "Blog", path: "/blog" },
-    { name: "Contact", path: "/contact" },
     { name: "Testimonials", path: "/testimonials" },
-    { name: "Footer", path: "/footer" },
+    // { name: "Footer", path: "/footer" },
     { name: "Users", path: "/users" },
   ];
 
@@ -21,12 +30,8 @@ export function SideBarItems({ initialPathname }) {
           <li key={area.path} className="mb-2">
             <Link
               href={area.path}
-              className={`block px-2 py-1 rounded transition "hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700
-                ${
-                  initialPathname === area.path
-                    ? "bg-accent-950 text-primary-50"
-                    : "hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700"
-                }`}
+              className={`block px-2 py-1 rounded transition hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700
+                ${currentPathname === area.path && "active"}`}
             >
               {area.name}
             </Link>
