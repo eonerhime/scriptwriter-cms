@@ -28,7 +28,7 @@ export default function PortfolioContent({ slug, initialData }) {
             const { error: uploadError } = await supabase.storage
               .from("portfolio-images")
               .upload(fileName, file, {
-                upsert: true, // Overwrite if file exists
+                upsert: false, // Do not overwrite if file exists
               });
 
             if (uploadError)

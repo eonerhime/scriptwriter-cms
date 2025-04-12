@@ -1,32 +1,55 @@
 "use client";
 
-import { updateContent } from "@/lib/actions";
+import { updateMultipleRowsContent } from "@/lib/actions";
 import { QueryClient, useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
-
-// Create a client
-const queryClient = new QueryClient();
+import Image from "next/image";
+import supabase from "@/lib/supabase";
 
 export default function BlogContent({ slug, initialData }) {
-  // Track file objects
-  const [imageFile, setImageFile] = useState(null);
-  const [pageData, setPageData] = useState(initialData[0]);
+  const [pageData, setPageData] = useState(initialData);
+  const queryClient = new QueryClient();
+  const [imageFiles, setImageFiles] = useState({});
+  const fileInputRefs = useRef({});
 
-  // Updated useMutation hook that integrates with your form action
+  const imageBucketUrl =
+    "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/blog-images/";
+
   const updateMutation = useMutation({
     mutationFn: async (formData) => {
       try {
-        // For new image, add the bucket URL to the file name and pass it to the form data
-        if (imageFile) {
-          formData.set("image", `${imageBucketUrl}${imageFile.name}`);
-        } else {
-          formData.set("image", pageData.image || "");
+        // Handle file uploads first
+        for (const [index, file] of Object.entries(imageFiles)) {
+          if (file) {
+            // Upload file to Supabase storage
+            const fileName = file.name;
+            const { error: uploadError } = await supabase.storage
+              .from("blog-images")
+              .upload(fileName, file, {
+                upsert: true, // Overwrite if file exists
+              });
+
+            if (uploadError)
+              throw new Error(`File upload failed: ${uploadError.message}`);
+
+            // Set the image URL in formData
+            formData.set(`image_${index}`, `${imageBucketUrl}${fileName}`);
+          }
         }
 
-        // Call the server action with the form data
-        const updatedData = await updateContent(slug, formData);
+        // Reset file inputs
+        Object.values(fileInputRefs.current).forEach((ref) => {
+          if (ref) {
+            ref.value = "";
+          }
+        });
+
+        // Clear image files state
+        setImageFiles({});
+
+        const updatedData = await updateMultipleRowsContent(slug, formData);
 
         return updatedData;
       } catch (error) {
@@ -35,117 +58,183 @@ export default function BlogContent({ slug, initialData }) {
       }
     },
     onSuccess: (updatedData) => {
-      // Show success toast
       toast.success("Content updated successfully!");
 
-      // Update the local state with returned data
-      setPageData(updatedData[0]);
+      setPageData(updatedData);
 
-      // Invalidate relevant queries if needed
-      queryClient.invalidateQueries({ queryKey: ["about", slug] });
+      queryClient.invalidateQueries({ queryKey: ["blog", slug] });
     },
     onError: (error) => {
-      // Show error toast
       toast.error(`Update failed: ${error.message}`);
     },
   });
 
-  // Image URL to the Supabase bucket
-  const imageBucketUrl =
-    "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/profile-images/";
+  // Handle adding a new testimonial
+  // const handleAddService = (e) => {
+  //   e.preventDefault();
 
-  // Handle image change for about image
-  const handleImageChange = (e) => {
+  //   setServices((prev) => [
+  //     ...prev,
+  //     {
+  //       id: `new-${Date.now()}`, // temporary unique key
+  //       serviceOffer: "",
+  //       serviceDetails: "",
+  //       isNew: true,
+  //     },
+  //   ]);
+  // };
+
+  // Handle submit of form
+
+  // Handle image change for specific index
+  const handleImageChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file);
+      setImageFiles((prev) => ({
+        ...prev,
+        [index]: file,
+      }));
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    formData.set("id", pageData.id);
 
-    // Trigger the mutation
+    // Add index information to formData
+    pageData.forEach((item, index) => {
+      formData.append(`_index_${item.id}`, index);
+
+      // Add current image if no new image is selected
+      if (!imageFiles[index] && item.image) {
+        formData.set(`image_${index}`, item.image);
+      }
+    });
+
     updateMutation.mutate(formData);
   };
 
   return (
     <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input type="hidden" name="id" value={pageData.id} />
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-8">
+        {pageData.map((item, index) => (
+          <div key={item.id} className="mb-4">
+            {/* Hidden ID or marker */}
+            {!item.isNew && (
+              <input type="hidden" name={`id_${index}`} value={item.id} />
+            )}
 
-        {/* Header */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="header" className="text-sm font-semibold">
-            Header
-          </label>
-          <input
-            name="header"
-            id="header"
-            disabled={updateMutation.isPending}
-            defaultValue={pageData.header}
-            className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          />
-        </div>
+            {/* Blog Title */}
+            <div className="flex flex-col gap-2 mb-2">
+              <label
+                htmlFor={`title_${index}`}
+                className="text-sm font-semibold"
+              >
+                Blog Title {item.isNew ? "(new)" : item.id}
+              </label>
+              <input
+                name={`title_${index}`}
+                id={`title_${index}`}
+                defaultValue={item.title}
+                className="capitalize p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              />
+            </div>
 
-        {/* About */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="about" className="text-sm font-semibold">
-            About
-          </label>
-          <textarea
-            name="about"
-            id="about"
-            disabled={updateMutation.isPending}
-            defaultValue={pageData.about}
-            className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          />
-        </div>
+            {/* Blog Excerpt */}
+            <div className="flex flex-col gap-2 mb-3">
+              <label
+                htmlFor={`excerpt_${index}`}
+                className="text-sm font-semibold"
+              >
+                Blog Excerpt
+              </label>
+              <textarea
+                name={`excerpt_${index}`}
+                id={`excerpt_${index}`}
+                defaultValue={item.excerpt}
+                rows={4}
+                className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              />
+            </div>
 
-        {/* Profile Image */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="image" className="text-sm font-semibold">
-            About Image
-            {pageData.image && " (Current image will be used if none selected)"}
-          </label>
-          <div className="w-6/12">
-            <input
-              type="file"
-              accept="image/*"
-              name="image"
-              disabled={updateMutation.isPending}
-              onChange={handleImageChange}
-              className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-            />
+            {/* Blog Image */}
+            <div className="flex flex-col gap-3 mb-4">
+              <label
+                htmlFor={`image_${index}`}
+                className="text-sm font-semibold mb-1"
+              >
+                Gallery Image {item.id}
+                {item.image && " (Current image will be used if none selected)"}
+              </label>
+              <div className="w-full h-64 relative">
+                <Image
+                  src={item.image}
+                  sizes=""
+                  alt="Blog Image"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-md"
+                />
+              </div>
+
+              <div className="w-full mt-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  id={`file_${index}`}
+                  name={`file_${index}`}
+                  ref={(el) => (fileInputRefs.current[index] = el)}
+                  disabled={updateMutation.isPending}
+                  onChange={(e) => handleImageChange(e, index)}
+                  className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+            </div>
+
+            {/* Delete Checkbox */}
+            <div className="flex items-center gap-2 mb-4">
+              <input
+                type="checkbox"
+                id={`delete_${index}`}
+                name={`delete_${index}`}
+                className="cursor-pointer"
+              />
+              <label
+                htmlFor={`delete_${index}`}
+                className="text-sm text-red-600 font-semibold"
+              >
+                Mark for deletion
+              </label>
+            </div>
+
+            {/* Divider */}
+            {/* {index < pageData.length - 1 && (
+              <div className="w-full border-1 border-gray-300 mt-12"></div>
+            )} */}
           </div>
-        </div>
+        ))}
 
-        {/* Hobbies */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="hobbies" className="text-sm font-semibold">
-            Hobbies
-          </label>
-          <input
-            name="hobbies"
-            id="hobbies"
+        {/* Button actions */}
+        <div className="col-span-full text-center mt-6">
+          <SubmitButton
+            isPending={updateMutation.isPending}
+            pendingLabel="Updating..."
             disabled={updateMutation.isPending}
-            defaultValue={pageData.hobbies}
-            className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          />
+          >
+            Update Content
+          </SubmitButton>
         </div>
-
-        {/* Form submit button */}
-        <SubmitButton
-          isPending={updateMutation.isPending}
-          pendingLabel="Updating..."
-          disabled={updateMutation.isPending}
-        >
-          Update Content
-        </SubmitButton>
       </form>
+
+      {/* <div className="text-center w-full mt-6">
+        <AddContentButton
+          onClick={handleAddService}
+          isPending={updateMutation.isPending}
+          pendingLabel="Adding..."
+        >
+          Add Service Fields
+        </AddContentButton>
+      </div> */}
     </div>
   );
 }

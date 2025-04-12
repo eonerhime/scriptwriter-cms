@@ -28,7 +28,7 @@ export default function GalleryContent({ slug, initialData }) {
             const { error: uploadError } = await supabase.storage
               .from("gallery-images")
               .upload(fileName, file, {
-                upsert: true, // Overwrite if file exists
+                upsert: false, // Overwrite if file exists
               });
 
             if (uploadError)
@@ -116,6 +116,7 @@ export default function GalleryContent({ slug, initialData }) {
               <div className="w-full h-64 relative">
                 <Image
                   src={item.image}
+                  sizes=""
                   alt="Gallery Image"
                   layout="fill"
                   objectFit="cover"
@@ -154,7 +155,7 @@ export default function GalleryContent({ slug, initialData }) {
           </div>
         ))}
 
-        {/* Update button spans full width */}
+        {/* Button action */}
         <div className="col-span-full text-center mt-6">
           <SubmitButton
             isPending={updateMutation.isPending}
