@@ -1,7 +1,14 @@
-export default function Button({ loading, isPending, pendingLabel, children }) {
+export default function Button({
+  onClick,
+  loading,
+  isPending,
+  pendingLabel,
+  children,
+}) {
   return (
     <button
       type="submit"
+      onClick={onClick}
       className={`mt-4 h-12 font-bold rounded w-full transition-colors ${
         loading
           ? "bg-gray-400 text-gray-900 cursor-not-allowed"

@@ -25,6 +25,7 @@ export default function GalleryContent({ slug, initialData }) {
           if (file) {
             // Upload file to Supabase storage
             const fileName = file.name;
+
             const { error: uploadError } = await supabase.storage
               .from("gallery-images")
               .upload(fileName, file, {
