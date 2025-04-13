@@ -5,11 +5,13 @@ import { usePathname } from "next/navigation";
 
 export function SideBarItems({ initialPathname }) {
   const pathname = usePathname();
-  const currentPathname =
-    initialPathname === "home" ? initialPathname : pathname;
+  let currentPathname = initialPathname === "home" ? initialPathname : pathname;
 
-  console.log("INITIAL PATHNAME:", initialPathname);
-  console.log("CURRENT PATHNAME:", pathname);
+  if (currentPathname === "/blogs/blog") {
+    currentPathname = "/blog";
+  }
+
+  console.log("Current Pathname:", currentPathname);
 
   const editAreas = [
     { name: "Home", path: "/home" },
@@ -19,7 +21,6 @@ export function SideBarItems({ initialPathname }) {
     { name: "Portfolio", path: "/portfolio" },
     { name: "Blog", path: "/blog" },
     { name: "Testimonials", path: "/testimonials" },
-    // { name: "Footer", path: "/footer" },
     { name: "Users", path: "/users" },
   ];
 
@@ -30,8 +31,9 @@ export function SideBarItems({ initialPathname }) {
           <li key={area.path} className="mb-2">
             <Link
               href={area.path}
-              className={`block px-2 py-1 rounded transition hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700
-                ${currentPathname === area.path && "active"}`}
+              className={`block px-2 py-1 rounded transition-colors duration-200 
+                ${currentPathname === area.path && "active"}
+              `}
             >
               {area.name}
             </Link>
