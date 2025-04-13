@@ -97,8 +97,8 @@ export default function GalleryContent({ slug, initialData }) {
   };
 
   return (
-    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-8">
+    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-2 md:p-6 scrollbar-thin scrollbar-thumb-gray-400">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         {pageData.map((item, index) => (
           <div key={item.id} className="col-span-1 mb-4 flex flex-col">
             {!item.isNew && (

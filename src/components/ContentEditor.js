@@ -1,5 +1,5 @@
 import AboutContent from "./AboutContent";
-import BlogContent from "./BlogContent";
+import BlogList from "./BlogList";
 import GalleryContent from "./GalleryContent";
 import HomeContent from "./HomeContent";
 import PortfolioContent from "./PortfolioContent";
@@ -8,7 +8,7 @@ import TestimonialsContent from "./TestimonialsContent";
 
 export default function ContentEditor({ slug, initialData }) {
   return (
-    <div className="w-full px-6 sm:px-14 max-w-screen-lg mx-auto">
+    <div className="w-full px-4 sm:px-10 max-w-screen-lg mx-auto">
       <div className="w-full flex flex-col mt-8 p-4 sm:p-6 border rounded-md shadow-md bg-primary-200 dark:bg-gray-700 text-primary-50 overflow-x-auto">
         <h2 className="text-xl uppercase text-center font-semibold mb-4 break-words">
           Edit{" "}
@@ -30,9 +30,7 @@ export default function ContentEditor({ slug, initialData }) {
         {slug === "portfolio" && (
           <PortfolioContent slug={slug} initialData={initialData} />
         )}
-        {slug === "blog" && (
-          <BlogContent slug={slug} initialData={initialData} />
-        )}
+        {slug === "blog" && <BlogList slug={slug} initialData={initialData} />}
         {slug === "testimonials" && (
           <TestimonialsContent slug={slug} initialData={initialData} />
         )}

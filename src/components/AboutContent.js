@@ -71,6 +71,7 @@ export default function AboutContent({ slug, initialData }) {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.target);
     formData.set("id", pageData.id);
 
