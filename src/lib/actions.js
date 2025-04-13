@@ -170,7 +170,7 @@ export async function updateMultipleRowsContent(slug, formData) {
   }
 }
 
-export async function createblog(slug, newData) {
+export async function createContent(slug, newData) {
   try {
     // Create a copy of newData to modify
     const newDataCopy = { ...newData };
@@ -197,13 +197,3 @@ export async function createblog(slug, newData) {
 }
 
 export async function resetPassword(email, password, passwordCopy) {}
-
-/*
-TO-DO:
-
-1. create new post and ensure image is being pushed to the storage in the proper way - DONE
-2. ensure upon redirect, the most recent posts are displayed
-3. check other paths fetch and save data without error based on the modification of the updateContent fnx
-4. look into pagination for blogs
-5. look into filtering of blog posts by title, date created, category
-*/

@@ -1,16 +1,17 @@
 "use client";
 
-import { createblog, updateContent } from "@/lib/actions";
+import { createContent, updateContent } from "@/lib/actions";
+import supabase from "@/lib/supabase";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import BackButton from "./BackButton";
 import SubmitButton from "./SubmitButton";
-import { useRouter } from "next/navigation";
-import supabase from "@/lib/supabase";
 
 export default function BlogContent({ slug, blog }) {
+  const [imageFile, setImageFile] = useState({});
   const [pageData, setPageData] = useState(
     blog || { title: "", content: "", image: "" }
   );
@@ -21,7 +22,6 @@ export default function BlogContent({ slug, blog }) {
     excerpt: pageData?.excerpt || "",
   });
   const queryClient = new QueryClient();
-  const [imageFile, setImageFile] = useState({});
   const fileInputRef = useRef({});
   const router = useRouter();
 
@@ -90,7 +90,7 @@ export default function BlogContent({ slug, blog }) {
         // Call the server action with the form data (image is now a URL)
         let updatedData;
         if (pageData?.published) {
-          updatedData = await createblog(slug, formDataObj);
+          updatedData = await createContent(slug, formDataObj);
         } else {
           updatedData = await updateContent(slug, formDataObj);
         }
