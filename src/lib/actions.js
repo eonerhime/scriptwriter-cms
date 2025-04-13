@@ -50,8 +50,7 @@ export async function updateContent(slug, formData) {
 
 export async function updateMultipleRowsContent(slug, formData) {
   try {
-    const imageBucketUrl =
-      "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/gallery-images/";
+    const imageBucketUrl = `https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/${slug}-images/`;
 
     // Extract all form entries
     const entries = Array.from(formData.entries());
@@ -163,6 +162,18 @@ export async function updateMultipleRowsContent(slug, formData) {
     console.error("Error updating content:", error);
     throw new Error(error.message || "Failed to update content");
   }
+}
+
+export async function createblog(slug, newData) {
+  const { data, error } = await supabase
+    .from(slug)
+    .insert([{ newData }])
+    .select();
+
+  if (error) {
+    console.error("Insert error:", error);
+    return null;
+  } else return data;
 }
 
 export async function resetPassword(email, password, passwordCopy) {}

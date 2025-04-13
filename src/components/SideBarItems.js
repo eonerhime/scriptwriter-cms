@@ -11,8 +11,6 @@ export function SideBarItems({ initialPathname }) {
     currentPathname = "/blog";
   }
 
-  console.log("Current Pathname:", currentPathname);
-
   const editAreas = [
     { name: "Home", path: "/home" },
     { name: "About", path: "/about" },
