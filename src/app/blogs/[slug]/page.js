@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import BlogContent from "@/components/BlogContent";
 import Spinner from "@/components/Spinner";
+import { useParams } from "next/navigation";
 
-export default function BlogPage({ params }) {
-  const slug = params;
+export default function BlogPage() {
+  const params = useParams();
+  const slug = params?.slug;
   const [blog, setBlog] = useState(null);
 
   useEffect(() => {

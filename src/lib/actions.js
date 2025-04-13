@@ -24,28 +24,34 @@ export async function createUser({ role, email, fullName, password, avatar }) {
 }
 
 export async function updateContent(slug, formData) {
-  const { id, ...updatedFields } = Object.fromEntries(formData.entries());
+  try {
+    const { id, ...updatedFields } = formData;
+    // const { id, ...updatedFields } = Object.fromEntries(formData.entries());
 
-  // Validate input parameters
-  if (!slug) throw new Error("Slug is required");
+    // Validate input parameters
+    if (!slug) throw new Error("Slug is required");
 
-  // Perform the update query
-  const { data, error } = await supabase
-    .from(slug)
-    .update(updatedFields)
-    .match({ id: Number(id) })
-    .select();
+    // Perform the update query
+    const { data, error } = await supabase
+      .from(slug)
+      .update(updatedFields)
+      .match({ id: Number(id) })
+      .select();
 
-  if (error) {
-    console.error("Error updating content:", error);
-    return { error };
+    if (error) {
+      console.error("Error updating content:", error);
+      return { error };
+    }
+
+    if (!data) {
+      console.warn("No matching row found to update.");
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Error in updateContent:", err);
+    throw err;
   }
-
-  if (!data) {
-    console.warn("No matching row found to update.");
-  }
-
-  return data;
 }
 
 export async function updateMultipleRowsContent(slug, formData) {
@@ -165,15 +171,39 @@ export async function updateMultipleRowsContent(slug, formData) {
 }
 
 export async function createblog(slug, newData) {
-  const { data, error } = await supabase
-    .from(slug)
-    .insert([{ newData }])
-    .select();
+  try {
+    // Create a copy of newData to modify
+    const newDataCopy = { ...newData };
 
-  if (error) {
-    console.error("Insert error:", error);
-    return null;
-  } else return data;
+    // Remove the ID and created_at from the newData if it exists
+    const { id, created_at, ...blogData } = newDataCopy;
+
+    // Insert the new blog data into the database
+    const { data, error } = await supabase
+      .from(slug)
+      .insert([blogData])
+      .select();
+
+    if (error) {
+      console.error("Insert error:", error);
+      return null;
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Error in createblog:", err);
+    throw err;
+  }
 }
 
 export async function resetPassword(email, password, passwordCopy) {}
+
+/*
+TO-DO:
+
+1. create new post and ensure image is being pushed to the storage in the proper way - DONE
+2. ensure upon redirect, the most recent posts are displayed
+3. check other paths fetch and save data without error based on the modification of the updateContent fnx
+4. look into pagination for blogs
+5. look into filtering of blog posts by title, date created, category
+*/
