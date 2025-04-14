@@ -15,11 +15,11 @@ export default function BlogList({ slug, initialData }) {
       console.error("Missing slug passed to BlogList");
       return;
     }
+    // This is a workaround for the server action not being able to access local storage directly
     // Store the selected blog in local storage for later use
-    // This is a workaround for the server action not being able to access local storage directly
     localStorage.setItem("selectedBlog", JSON.stringify(blog));
+
     // Redirect to the blog creation page
-    // This is a workaround for the server action not being able to access local storage directly
     router.push(`/blogs/${slug}`);
   };
 

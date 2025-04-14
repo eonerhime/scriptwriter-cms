@@ -38,11 +38,11 @@ export async function logout() {
 }
 
 // Handles fetch query for all tables in supabase
-export async function getContent(slug) {
+export async function getContent(slug, filter) {
   const { data, error } = await supabase
     .from(slug)
     .select("*")
-    .order("id", { ascending: true });
+    .order(filter.value, { ascending: filter.status });
 
   if (error) {
     console.error(error);

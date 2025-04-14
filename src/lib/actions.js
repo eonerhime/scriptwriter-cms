@@ -1,6 +1,5 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
 import bcrypt from "bcryptjs";
 import supabase from "./supabase";
 
@@ -182,7 +181,8 @@ export async function createContent(slug, newData) {
     const { data, error } = await supabase
       .from(slug)
       .insert([blogData])
-      .select();
+      .select()
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("Insert error:", error);
