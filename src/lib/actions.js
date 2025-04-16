@@ -3,7 +3,10 @@
 import bcrypt from "bcryptjs";
 import supabase from "./supabase";
 
-export async function createUser({ role, email, fullName, password, avatar }) {
+export async function createUser(slug, formDataObj) {
+  const { role, email, fullName, password, avatar_url } = formDataObj;
+
+  // Hash the password before storing it
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const { data, error } = await supabase.from("users").insert([
@@ -12,20 +15,22 @@ export async function createUser({ role, email, fullName, password, avatar }) {
       email,
       fullName,
       password_hash: hashedPassword,
-      avatar_url: avatar,
+      avatar_url,
     },
   ]);
 
   if (error) {
     console.error("Insert error:", error);
     return null;
-  } else return data;
+  }
+
+  return data;
 }
 
 export async function updateContent(slug, formData) {
   try {
     const { id, ...updatedFields } = formData;
-    // const { id, ...updatedFields } = Object.fromEntries(formData.entries());
+    // console.log("User Data:", updatedFields);
 
     // Validate input parameters
     if (!slug) throw new Error("Slug is required");
@@ -197,3 +202,18 @@ export async function createContent(slug, newData) {
 }
 
 export async function resetPassword(email, password, passwordCopy) {}
+
+// Test function
+// async function setUser() {
+//   const data = await createUser(
+//     "super admin",
+//     "emo.onerhime@gmail.com",
+//     "asdf123*",
+//     "Emo Onerhime",
+//     "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/users-images//emo.jpg"
+//   );
+
+//   console.log("FETCHED DATA", data);
+// }
+
+// setUser();

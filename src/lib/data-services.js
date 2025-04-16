@@ -56,25 +56,25 @@ export async function getContent(slug, filter) {
   return data;
 }
 
-export async function addBlog({ post }) {
+export async function getRole() {
   const { data, error } = await supabase
-    .from("blog")
-    .insert([{ post }])
-    .select();
+    .from("roles")
+    .select("*")
+    .order("id", { ascending: true });
 
   if (error) {
     console.error(error);
-    throw new Error("Could not add blog");
+    throw new Error("Roles could not be loaded");
   }
 
   return data;
 }
 
 // Test function
-async function fetchData() {
-  const data = await getContent("services");
+// async function fetchData() {
+//   const data = await getRole();
 
-  console.log("FETCHED DATA", data);
-}
+//   console.log("FETCHED DATA", data);
+// }
 
 // fetchData();

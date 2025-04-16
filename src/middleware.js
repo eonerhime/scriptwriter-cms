@@ -22,5 +22,6 @@ export const config = {
     "/testimonials",
     "/users",
     "/blogs/:path*",
+    "/users/:path",
   ],
 };
