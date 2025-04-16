@@ -7,8 +7,13 @@ export function SideBarItems({ initialPathname }) {
   const pathname = usePathname();
   let currentPathname = initialPathname === "home" ? initialPathname : pathname;
 
+  // Check if the pathname is "/blogs/blog" and set it to "/blog"
   if (currentPathname === "/blogs/blog") {
     currentPathname = "/blog";
+  }
+
+  if (currentPathname === "/users/users") {
+    currentPathname = "/users";
   }
 
   const editAreas = [

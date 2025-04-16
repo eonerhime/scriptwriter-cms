@@ -20,7 +20,7 @@ export default function BlogPage() {
   }, [slug]);
 
   if (!blog) {
-    return <Spinner />;
+    return <p className="text-red-500">No blog found</p>;
   }
 
   return <BlogContent slug={slug} blog={blog} />;

@@ -25,10 +25,6 @@ export default function BlogContent({ slug, blog }) {
   const fileInputRef = useRef({});
   const router = useRouter();
 
-  // Image URL to the Supabase bucket
-  const imageBucketUrl =
-    "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/blog-images/";
-
   // Generate an excerpt from the blog post content
   function createExcerpt(text, maxLength = 150) {
     if (text.length <= maxLength) return text;
