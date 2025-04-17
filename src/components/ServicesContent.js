@@ -90,7 +90,7 @@ export default function ServicessContent({ slug, initialData }) {
             </div>
 
             {/* Delete Checkbox */}
-            <div className="flex items-center gap-2 mb-4">
+            {/* <div className="flex items-center gap-2 mb-4">
               <input
                 type="checkbox"
                 id={`delete_${index}`}
@@ -103,7 +103,7 @@ export default function ServicessContent({ slug, initialData }) {
               >
                 Mark for deletion
               </label>
-            </div>
+            </div> */}
 
             {/* Divider */}
             {index < pageData.length - 1 && (

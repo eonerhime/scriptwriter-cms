@@ -54,6 +54,7 @@ export default function BlogList({ slug, initialData }) {
       <div className="grid grid-col-1 lg:grid-cols-2 gap-8">
         {blogs.map((blog, index) => (
           <div>
+            {/* Blog post */}
             <button
               key={blog?.id}
               onClick={() => handleBlogClick(blog)}
@@ -97,7 +98,7 @@ export default function BlogList({ slug, initialData }) {
             </button>
 
             {/* Delete Checkbox */}
-            <div
+            {/* <div
               htmlFor={`delete_${index}`}
               className="flex items-center gap-2 mt-4 mb-4"
             >
@@ -113,7 +114,7 @@ export default function BlogList({ slug, initialData }) {
               >
                 Mark for deletion
               </label>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

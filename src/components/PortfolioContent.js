@@ -140,7 +140,8 @@ export default function PortfolioContent({ slug, initialData }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-4 mb-4">
+            {/* Delete content checkbox */}
+            {/* <div className="flex items-center gap-2 mt-4 mb-4">
               <input
                 type="checkbox"
                 id={`delete_${index}`}
@@ -153,7 +154,7 @@ export default function PortfolioContent({ slug, initialData }) {
               >
                 Mark for deletion
               </label>
-            </div>
+            </div> */}
           </div>
         ))}
 
