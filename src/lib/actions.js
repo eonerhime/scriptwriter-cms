@@ -9,15 +9,18 @@ export async function createUser(slug, formDataObj) {
   // Hash the password before storing it
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const { data, error } = await supabase.from("users").insert([
-    {
-      role,
-      email,
-      fullName,
-      password_hash: hashedPassword,
-      avatar_url,
-    },
-  ]);
+  const { data, error } = await supabase
+    .from("users")
+    .insert([
+      {
+        role,
+        email,
+        fullName,
+        password_hash: hashedPassword,
+        avatar_url,
+      },
+    ])
+    .select();
 
   if (error) {
     console.error("Insert error:", error);
@@ -30,7 +33,6 @@ export async function createUser(slug, formDataObj) {
 export async function updateContent(slug, formData) {
   try {
     const { id, ...updatedFields } = formData;
-    // console.log("User Data:", updatedFields);
 
     // Validate input parameters
     if (!slug) throw new Error("Slug is required");
