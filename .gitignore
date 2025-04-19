@@ -2,6 +2,11 @@
 
 # components
 SBItems.js
+
+# files
+UsersContent.js
+scriptwriter-cms-project.zip
+
 # dependencies
 /node_modules
 /.pnp

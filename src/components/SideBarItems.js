@@ -46,10 +46,3 @@ export function SideBarItems({ initialPathname }) {
     </div>
   );
 }
-
-/*
-${pathname === area.path
-                  ? "bg-accent-950 text-primary-50"
-                  : "hover:bg-gray-200 dark:hover:text-gray-50 dark:hover:bg-gray-700"
-              }`}
-*/

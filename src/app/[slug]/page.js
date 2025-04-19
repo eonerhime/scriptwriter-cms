@@ -14,8 +14,8 @@ export default async function Page({ params }) {
   if (!slug) return <p className="text-red-500">Invalid page request</p>;
 
   // Set filter condition based on slug
-  // For "blog", sort by created_at in descending order
-  // For others, sort by id in ascending order
+  // For "blog", sort by created_at in descending order: status === false
+  // For others, sort by id in ascending order: status === true
   filter =
     slug === "blog"
       ? { value: "created_at", status: false }
@@ -35,10 +35,6 @@ export default async function Page({ params }) {
   if (!data || !data.length) return notFound();
 
   return (
-    <ContentEditor
-      slug={resolvedSlug}
-      initialData={data}
-      roles={(roles || [])}
-    />
+    <ContentEditor slug={resolvedSlug} initialData={data} roles={roles || []} />
   );
 }
