@@ -7,7 +7,6 @@ import Button from "./Button";
 
 export default function BlogList({ slug, initialData }) {
   const [blogs, setBlogs] = useState(initialData || {});
-  // const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleBlogClick = (blog) => {
@@ -54,7 +53,7 @@ export default function BlogList({ slug, initialData }) {
       <div className="grid grid-col-1 lg:grid-cols-2 gap-8">
         {blogs.map((blog, index) => (
           <div>
-            {/* Blog post */}
+            {/* View Blog post */}
             <button
               key={blog?.id}
               onClick={() => handleBlogClick(blog)}

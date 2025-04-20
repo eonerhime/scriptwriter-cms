@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import BlogContent from "@/components/BlogContent";
-import Spinner from "@/components/Spinner";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function BlogPage() {
   const params = useParams();
