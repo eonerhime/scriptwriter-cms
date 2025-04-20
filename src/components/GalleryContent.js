@@ -140,6 +140,16 @@ export default function GalleryContent({ slug, initialData }) {
                   className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                 />
               </div>
+              <label htmlFor={`description_${index}`} className="text-md ">
+                Image Description
+              </label>
+              <textarea
+                id={`description_${index}`}
+                name={`description_${index}`}
+                defaultValue={item.description}
+                rows={2}
+                className="p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+              />
             </div>
 
             <div className="flex items-center gap-2 mt-4">
