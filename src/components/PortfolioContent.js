@@ -138,6 +138,16 @@ export default function PortfolioContent({ slug, initialData }) {
                   className="cursor-pointer w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                 />
               </div>
+              <label htmlFor={`description_${index}`} className="text-md ">
+                Poster Description
+              </label>
+              <textarea
+                id={`description_${index}`}
+                name={`description_${index}`}
+                defaultValue={item.description}
+                rows={2}
+                className="p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+              />
             </div>
 
             {/* Delete content checkbox */}

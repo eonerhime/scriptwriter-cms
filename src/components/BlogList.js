@@ -52,10 +52,9 @@ export default function BlogList({ slug, initialData }) {
       </div>
       <div className="grid grid-col-1 lg:grid-cols-2 gap-8">
         {blogs.map((blog, index) => (
-          <div>
+          <div key={blog?.id}>
             {/* View Blog post */}
             <button
-              key={blog?.id}
               onClick={() => handleBlogClick(blog)}
               className="border-1 p-4 rounded-lg border-accent-950 cursor-pointer mb-b"
             >
