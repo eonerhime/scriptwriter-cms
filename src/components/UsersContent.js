@@ -1,7 +1,7 @@
 "use client";
 
 import { createUser, updateContent } from "@/lib/actions";
-import supabase from "@/lib/supabase";
+import { getSupabaseClient } from "@/lib/getSupabaseClient";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -38,6 +38,7 @@ export default function UsersContent({ slug, user, roles }) {
   const queryClient = new QueryClient();
   const fileInputRef = useRef({});
   const router = useRouter();
+  const supabase = getSupabaseClient();
 
   const updateMutation = useMutation({
     mutationFn: async (formData) => {

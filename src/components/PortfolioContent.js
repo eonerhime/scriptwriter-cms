@@ -6,13 +6,14 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
-import supabase from "@/lib/supabase";
+import { getSupabaseClient } from "@/lib/getSupabaseClient";
 
 export default function PortfolioContent({ slug, initialData }) {
   const [pageData, setPageData] = useState(initialData);
   const queryClient = new QueryClient();
   const [imageFiles, setImageFiles] = useState({});
   const fileInputRefs = useRef({});
+  const supabase = getSupabaseClient();
 
   const imageBucketUrl =
     "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/portfolio-images/";

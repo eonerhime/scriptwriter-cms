@@ -1,7 +1,7 @@
 "use client";
 
 import { createContent, updateContent } from "@/lib/actions";
-import supabase from "@/lib/supabase";
+import { getSupabaseClient } from "@/lib/getSupabaseClient";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ export default function BlogContent({ slug, blog }) {
   const queryClient = new QueryClient();
   const fileInputRef = useRef({});
   const router = useRouter();
+  const supabase = getSupabaseClient();
 
   // Generate an excerpt from the blog post content
   function createExcerpt(text, maxLength = 150) {
