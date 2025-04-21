@@ -1,9 +1,12 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import supabase from "./supabase";
+import { getSupabaseClient } from "./getSupabaseClient";
 
 export async function createUser(slug, formDataObj) {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
   const { role, email, fullName, password, avatar_url } = formDataObj;
 
   // Hash the password before storing it
@@ -31,6 +34,9 @@ export async function createUser(slug, formDataObj) {
 }
 
 export async function updateContent(slug, formData) {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
   try {
     const { id, ...updatedFields } = formData;
 
@@ -61,6 +67,9 @@ export async function updateContent(slug, formData) {
 }
 
 export async function updateMultipleRowsContent(slug, formData) {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
   try {
     const imageBucketUrl = `https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/${slug}-images/`;
 
@@ -177,6 +186,9 @@ export async function updateMultipleRowsContent(slug, formData) {
 }
 
 export async function createContent(slug, newData) {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
   try {
     // Create a copy of newData to modify
     const newDataCopy = { ...newData };

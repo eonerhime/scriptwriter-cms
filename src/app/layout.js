@@ -23,6 +23,8 @@ export const metadata = {
   description: "Content Management System for Ifeoma's website.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({ children }) {
   const session = await auth();
 

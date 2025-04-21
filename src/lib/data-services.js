@@ -1,9 +1,12 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import supabase from "./supabase";
+import { getSupabaseClient } from "./getSupabaseClient";
 
 export async function getUser({ email, password }) {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
   try {
     const { data: user, error } = await supabase
       .from("users")
@@ -29,6 +32,9 @@ export async function getUser({ email, password }) {
 }
 
 export async function logout() {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
   const { error } = await supabase.auth.signOut();
 
   if (error) {
@@ -39,6 +45,9 @@ export async function logout() {
 
 // Handles fetch query for all tables in supabase
 export async function getContent(slug, filter) {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
   const { data, error } = await supabase
     .from(slug)
     .select("*")
@@ -57,6 +66,9 @@ export async function getContent(slug, filter) {
 }
 
 export async function getRole() {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
   const { data, error } = await supabase
     .from("roles")
     .select("*")
