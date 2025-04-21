@@ -2,11 +2,11 @@
 
 import { refreshSession } from "@/actions/refreshSession";
 import { signIn } from "@/lib/auth";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import LoginButton from "./LoginButton";
-import { useSession } from "next-auth/react";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -72,7 +72,7 @@ export default function LoginForm() {
         <input
           type="email"
           id="email"
-          autoComplete="username"
+          name="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -82,7 +82,7 @@ export default function LoginForm() {
         <input
           type="password"
           id="password"
-          autoComplete="current-password"
+          name="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
