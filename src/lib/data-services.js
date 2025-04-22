@@ -31,14 +31,14 @@ export async function getUser({ email, password }) {
   }
 }
 
-export async function getEmail(email) {
+export async function getUserByEmail(email) {
   // Ensure Supabase connection is valid
   const supabase = getSupabaseClient();
 
   try {
     const { data: user, error } = await supabase
       .from("users")
-      .select("email")
+      .select("*")
       .eq("email", email)
       .single();
 
@@ -50,18 +50,6 @@ export async function getEmail(email) {
   } catch (error) {
     console.error("Error fetching user:", error.message);
     return null;
-  }
-}
-
-export async function logout() {
-  // Ensure Supabase connection is valid
-  const supabase = getSupabaseClient();
-
-  const { error } = await supabase.auth.signOut();
-
-  if (error) {
-    console.error("Logout failed:", error.message);
-    return { error };
   }
 }
 

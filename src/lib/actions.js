@@ -3,6 +3,18 @@
 import bcrypt from "bcryptjs";
 import { getSupabaseClient } from "./getSupabaseClient";
 
+export async function logout() {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error("Logout failed:", error.message);
+    return { error };
+  }
+}
+
 export async function createUser(slug, formDataObj) {
   // Ensure Supabase connection is valid
   const supabase = getSupabaseClient();
