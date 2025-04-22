@@ -31,6 +31,28 @@ export async function getUser({ email, password }) {
   }
 }
 
+export async function getEmail(email) {
+  // Ensure Supabase connection is valid
+  const supabase = getSupabaseClient();
+
+  try {
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("email")
+      .eq("email", email)
+      .single();
+
+    if (error || !user) {
+      throw new Error("Email not found");
+    }
+
+    return user;
+  } catch (error) {
+    console.error("Error fetching user:", error.message);
+    return null;
+  }
+}
+
 export async function logout() {
   // Ensure Supabase connection is valid
   const supabase = getSupabaseClient();
@@ -83,10 +105,10 @@ export async function getRole() {
 }
 
 // Test function
-// async function fetchData() {
-//   const data = await getRole();
+async function fetchData() {
+  const data = await getEmail("emo.onerhime@gmail.com");
 
-//   console.log("FETCHED DATA", data);
-// }
+  console.log("FETCHED DATA", data);
+}
 
 // fetchData();

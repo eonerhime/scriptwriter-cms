@@ -101,7 +101,7 @@ export default function LoginForm() {
         <p className="flex gap-4 justify-center items-center">
           Forgot your password?
           <Link
-            href="/passwordReset"
+            href="/checkEmail"
             className="cursor-pointer hover:underline font-bold hover-text-accent-950"
           >
             Reset Password

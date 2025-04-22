@@ -215,7 +215,26 @@ export async function createContent(slug, newData) {
   }
 }
 
-export async function resetPassword(email, password, passwordCopy) {}
+export async function updateUserPassword(email, password) {
+  try {
+    const supabase = getSupabaseClient();
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 2. Update the password in your users table
+    const { data, error } = await supabase
+      .from("users")
+      .update({ password_hash: hashedPassword })
+      .eq("email", email)
+      .select();
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("Error updating password:", error);
+    return { success: false, error };
+  }
+}
 
 // Test function
 // async function setUser() {

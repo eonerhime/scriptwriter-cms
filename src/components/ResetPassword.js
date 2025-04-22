@@ -1,103 +1,142 @@
 "use client";
 
-import { useState } from "react";
-import GoBackButton from "./GoBackButton";
-import ResetPasswordButton from "./ResetPasswordButton";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { getSupabaseClient } from "@/lib/getSupabaseClient";
+import { updateUserPassword } from "@/lib/actions";
 
-export default async function ResetPassword({ email }) {
+export default function ResetPassword() {
   const [password, setPassword] = useState("");
-  const [passwordCopy, setPasswordCopy] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [mismatch, setMismatch] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  async function handleSubmit(e) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const supabase = getSupabaseClient();
+
+  // Confirm email and decode it
+  useEffect(() => {
+    // Get email from URL parameters
+    const emailParam = searchParams.get("email");
+
+    if (!emailParam) {
+      // If no email is provided, redirect back to the reset email page
+      router.push("/checkEmail");
+      return;
+    }
+
+    setEmail(decodeURIComponent(emailParam));
+  }, [searchParams, router]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     setError("");
-    setLoading(true);
 
-    if (!password || !passwordCopy) {
-      setError("Enter your new password in both fields!");
-      setLoading(false);
+    // Validate passwords
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
       return;
     }
 
-    if (password !== passwordCopy) {
-      setMismatch;
-      setError("Entered passwords do no match!");
-      setLoading(false);
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      setIsLoading(false);
       return;
     }
 
-    // try {
-    //   const result = await signIn("credentials", {
-    //     redirect: false,
-    //     email,
-    //     password,
-    //   });
+    try {
+      // Use Supabase Auth API to reset password
+      const { success, data } = await updateUserPassword(email, password);
 
-    //   await refreshSession();
+      if (!success) {
+        setError("Error updating your password");
+        setSuccess(success);
+        setIsLoading(false);
+        return;
+      }
 
-    //   if (result?.error) {
-    //     setError("Invalid email or password");
-    //     setLoading(false);
-    //     return;
-    //   }
+      setSuccess(success);
+    } catch (err) {
+      setError("Failed to reset password. Please try again.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    //   router.push("/home");
-    // } catch (err) {
-    //   console.error("Sign-in error:", err);
-    //   setError("An error occurred. Please try again.");
-    // } finally {
-    //   setLoading(false);
-    // }
+  if (success) {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <h2 className="text-2xl font-semibold mb-6">
+          Password Reset Successful
+        </h2>
+        <p className="mb-6">Your password has been reset successfully.</p>
+        <Link
+          href="/login"
+          className="text-primary-50 transition-all duration-300 ease-in-out hover:underline underline-offset-8 decoration-accent-950"
+        >
+          Return to Login
+        </Link>
+      </div>
+    );
   }
 
   return (
-    <>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col p-6 rounded-lg shadow-md w-full max-w-md h-auto border-[1px] dark:border-primary-500"
-      >
-        <h2 className="text-xl font-bold mb-4 text-center">Password Reset</h2>
+    <div className="flex flex-col items-center justify-center">
+      <h2 className="text-2xl font-semibold mb-6">Create New Password</h2>
+      <p className="mb-4">Create a new password for {email}</p>
 
-        {error && <p className="text-accent-950 text-center mb-4">{error}</p>}
+      {error && <p className="text-red-500 mb-4">{error}</p>}
 
-        <label>{email}</label>
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="mb-4">
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="New Password"
+            className="border-1 p-4 rounded-sm w-full focus:outline-none focus:ring-1 focus-ring-custom dark:border-primary-950"
+            required
+          />
+        </div>
 
-        <input
-          type="password"
-          id="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={`border-[1px] p-2 mb-2 rounded w-full ${
-            mismatch
-              ? "border-red-600"
-              : "   dark:border-primary-500 focus:outline-none focus:ring-1 focus-ring-custom dark:border-accent-950"
-          }`}
-          required
-        />
-        <input
-          type="password"
-          id="passwordCopy"
-          placeholder="Re-enter Password"
-          value={passwordCopy}
-          onChange={(e) => setPasswordCopy(e.target.value)}
-          className={`border-[1px] p-2 mb-2 rounded w-full ${
-            mismatch
-              ? "border-red-600"
-              : "   dark:border-primary-500 focus:outline-none focus:ring-1 focus-ring-custom dark:border-accent-950"
-          }`}
-          required
-        />
+        <div className="mb-6">
+          <input
+            type="password"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm New Password"
+            className="border-1 p-4 rounded-sm w-full focus:outline-none focus:ring-1 focus-ring-custom dark:border-primary-950"
+            required
+          />
+        </div>
 
-        <ResetPasswordButton loading={loading} />
+        <div className="w-full">
+          <div className="flex gap-2 justify-between">
+            <Link
+              href="/checkEmail"
+              className="text-primary-50 transition-all duration-300 ease-in-out hover:underline underline-offset-8 decoration-accent-950"
+            >
+              &larr; Back
+            </Link>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="text-primary-50 transition-all duration-300 ease-in-out hover:underline underline-offset-8 decoration-accent-950 cursor-pointer"
+            >
+              {isLoading ? "Resetting..." : "Reset Password"}
+            </button>
+          </div>
+        </div>
       </form>
-
-      <div className="mt-6"></div>
-
-      <GoBackButton>Go Back</GoBackButton>
-    </>
+    </div>
   );
 }
