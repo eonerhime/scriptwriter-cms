@@ -10,8 +10,8 @@ import LoginButton from "./LoginButton";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("ifeoma.onerhime@gmail.com");
-  const [password, setPassword] = useState("asdf123*");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { data: session, status } = useSession();

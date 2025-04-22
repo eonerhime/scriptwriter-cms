@@ -1,6 +1,6 @@
 "use client";
 
-import { getEmail } from "@/lib/data-services";
+import { getUserByEmail } from "@/lib/data-services";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,9 +23,7 @@ export default function ResetEmail() {
         return;
       }
       // Verify email exists in the database
-      const { email: verifiedEmail } = await getEmail(email);
-
-      console.log("VERIFIED EMAIL:", verifiedEmail);
+      const { email: verifiedEmail } = await getUserByEmail(email);
 
       if (!verifiedEmail) {
         setError("Email not found in our records");
