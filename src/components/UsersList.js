@@ -19,8 +19,8 @@ export default function UsersList({ slug, data, roles }) {
     localStorage.setItem("selectedUser", JSON.stringify(user));
     localStorage.setItem("usersRoles", JSON.stringify(roles));
 
-    // Redirect to the blog creation page
-    router.push(`/users/${user.id}`);
+    // Redirect to the blog creation page; pass slug for supabase filtering
+    router.push(`/users/${slug}`);
   };
 
   const handleCreateNewUser = () => {
@@ -31,12 +31,11 @@ export default function UsersList({ slug, data, roles }) {
 
     // Create a new user object with default values
     const newUser = {
-      role: "super admin",
-      email: "emo.onerhime@gmail.com",
-      fullName: "Emo Onerhime",
-      password: "asdf123",
-      avatar_url:
-        "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/users-images/emo.jpg",
+      role: "",
+      email: "",
+      fullName: "",
+      password: "",
+      avatar_url: "",
       published: true,
     };
 

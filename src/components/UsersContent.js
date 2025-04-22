@@ -30,6 +30,7 @@ export default function UsersContent({ slug, user, roles }) {
     avatar_url: pageData?.avatar_url || "",
   });
   const [isPending, setIsPending] = useState(false);
+  const [published, setPublished] = useState(pageData?.published || false);
 
   // Handle password and confirm password, and error state if there's a mismatch
   const [password, setPassword] = useState("");
@@ -90,25 +91,30 @@ export default function UsersContent({ slug, user, roles }) {
           fileInputRef.current.value = "";
         }
 
-        // Call the server action with the form data (image is now a URL)
+        console.log("PROGRAM DATA:", pageData);
 
-        clearTimeout(pageData?.published);
-
-        if (pageData?.published) {
+        if (published) {
           await createUser(slug, formDataObj);
+          setPublished(false);
         } else {
           await updateContent(slug, formDataObj);
         }
+
+        // Call the server action with the form data (image is now a URL)
+        clearTimeout(pageData?.published);
 
         // Refetch updated data
         const { data: updatedData } = await supabase
           .from(slug)
           .select("*")
-          .limit(1);
+          .eq("email", formDataObj.email)
+          .single();
 
         if (!updatedData) {
           throw new Error("Failed to create/update content");
         }
+
+        console.log("UPDATED DATA:", updatedData);
 
         return updatedData;
       } catch (error) {
