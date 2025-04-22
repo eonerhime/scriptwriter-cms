@@ -13,7 +13,7 @@ export async function createUser(slug, formDataObj) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const { data, error } = await supabase
-    .from("users")
+    .from(slug)
     .insert([
       {
         role,
