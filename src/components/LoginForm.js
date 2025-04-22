@@ -90,7 +90,11 @@ export default function LoginForm() {
           required
         />
 
-        <LoginButton loading={loading} />
+        <LoginButton
+          type="submit"
+          btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950  hover:bg-accent-950 hover:border-primary-50"
+          loading={loading}
+        />
       </form>
 
       <div className="mt-6 text-sm text-center">
