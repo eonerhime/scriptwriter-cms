@@ -8,12 +8,13 @@ import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
 import { getSupabaseClient } from "@/lib/getSupabaseClient";
 
-export default function GalleryContent({ slug, initialData }) {
-  const [pageData, setPageData] = useState(initialData);
+export default function GalleryContent({ slug, data }) {
+  const [pageData, setPageData] = useState(data);
   const queryClient = new QueryClient();
   const [imageFiles, setImageFiles] = useState({});
   const fileInputRefs = useRef({});
   const supabase = getSupabaseClient();
+  const [isPending, setIsPending] = useState(false);
 
   const imageBucketUrl =
     "https://aavujdgrdxggljccomxv.supabase.co/storage/v1/object/public/gallery-images/";
@@ -51,17 +52,35 @@ export default function GalleryContent({ slug, initialData }) {
         // Clear image files state
         setImageFiles({});
 
-        const updatedData = await updateMultipleRowsContent(slug, formData);
+        await updateMultipleRowsContent(slug, formData);
+
+        // Refetch updated data
+        const { data: updatedData } = await supabase
+          .from(slug)
+          .select("*")
+          .limit(1);
+
         return updatedData;
       } catch (error) {
         console.error("Error in mutation:", error);
         throw new Error(error.message || "Failed to update content");
       }
     },
+    onMutate: () => {
+      // Set pending state
+      setIsPending(true);
+    },
     onSuccess: (updatedData) => {
-      toast.success("Content updated successfully!");
+      // Set pending state
+      setTimeout(() => {
+        setIsPending(false);
+      }, 500);
 
+      // Update state with updated data
       setPageData(updatedData);
+
+      // Display message on successful update
+      toast.success("Content updated successfully!");
 
       queryClient.invalidateQueries({ queryKey: ["gallery", slug] });
     },
@@ -86,7 +105,7 @@ export default function GalleryContent({ slug, initialData }) {
     const formData = new FormData(e.target);
 
     // Add index information to formData
-    pageData.forEach((item, index) => {
+    pageData?.forEach((item, index) => {
       formData.append(`_index_${item.id}`, index);
 
       // Add current image if no new image is selected
@@ -104,7 +123,7 @@ export default function GalleryContent({ slug, initialData }) {
         onSubmit={handleSubmit}
         className="grid grid-cols-1 sm:grid-cols-2 gap-8"
       >
-        {pageData.map((item, index) => (
+        {pageData?.map((item, index) => (
           <div key={item.id} className="col-span-1 mb-4 flex flex-col">
             {!item.isNew && (
               <input type="hidden" name={`id_${index}`} value={item.id} />
@@ -173,9 +192,11 @@ export default function GalleryContent({ slug, initialData }) {
         {/* Button action */}
         <div className="col-span-full text-center mt-6">
           <SubmitButton
-            isPending={updateMutation.isPending}
+            key={isPending ? "pending" : "idle"}
+            type="submit"
+            isPending={isPending}
             pendingLabel="Updating..."
-            disabled={updateMutation.isPending}
+            btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950  hover:bg-accent-950 hover:border-primary-50"
           >
             Update Content
           </SubmitButton>

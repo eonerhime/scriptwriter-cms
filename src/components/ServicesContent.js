@@ -5,16 +5,27 @@ import { QueryClient, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
+import { getSupabaseClient } from "@/lib/getSupabaseClient";
 
-export default function ServicessContent({ slug, initialData }) {
-  const [pageData, setPageData] = useState(initialData);
+export default function ServicessContent({ slug, data }) {
+  const [pageData, setPageData] = useState(data);
   const queryClient = new QueryClient();
+  const supabase = getSupabaseClient();
+
+  const [isPending, setIsPending] = useState(false);
+
   // const [services, setServices] = useState([...pageData]);
 
   const updateMutation = useMutation({
     mutationFn: async (formData) => {
       try {
-        const updatedData = await updateMultipleRowsContent(slug, formData);
+        await updateMultipleRowsContent(slug, formData);
+
+        // Refetch updated data
+        const { data: updatedData } = await supabase
+          .from(slug)
+          .select("*")
+          .limit(1);
 
         return updatedData;
       } catch (error) {
@@ -22,10 +33,21 @@ export default function ServicessContent({ slug, initialData }) {
         throw new Error(error.message || "Failed to update content");
       }
     },
+    onMutate: () => {
+      // Set pending state
+      setIsPending(true);
+    },
     onSuccess: (updatedData) => {
-      toast.success("Content updated successfully!");
+      // Set pending state
+      setTimeout(() => {
+        setIsPending(false);
+      }, 500);
 
+      // Update state with updated data
       setPageData(updatedData);
+
+      // Display message on successful update
+      toast.success("Content updated successfully!");
 
       queryClient.invalidateQueries({ queryKey: ["services", slug] });
     },
@@ -39,7 +61,7 @@ export default function ServicessContent({ slug, initialData }) {
     const formData = new FormData(e.target);
 
     // Add index information to formData
-    pageData.forEach((item, index) => {
+    pageData?.forEach((item, index) => {
       formData.append(`_index_${item.id}`, index);
     });
 
@@ -49,7 +71,7 @@ export default function ServicessContent({ slug, initialData }) {
   return (
     <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {pageData.map((item, index) => (
+        {pageData?.map((item, index) => (
           <div key={item.id} className="mb-4">
             {/* Hidden ID or marker */}
             {!item.isNew && (
@@ -106,7 +128,7 @@ export default function ServicessContent({ slug, initialData }) {
             </div> */}
 
             {/* Divider */}
-            {index < pageData.length - 1 && (
+            {index < pageData?.length - 1 && (
               <div className="border-1 border-gray-300 mt-12"></div>
             )}
           </div>
@@ -115,9 +137,11 @@ export default function ServicessContent({ slug, initialData }) {
         {/* Button actions */}
         <div className="text-center w-full mt-6">
           <SubmitButton
-            isPending={updateMutation.isPending}
+            key={isPending ? "pending" : "idle"}
+            type="submit"
+            isPending={isPending}
             pendingLabel="Updating..."
-            disabled={updateMutation.isPending}
+            btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950  hover:bg-accent-950 hover:border-primary-50"
           >
             Update Content
           </SubmitButton>

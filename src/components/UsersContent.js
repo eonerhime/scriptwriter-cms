@@ -29,6 +29,7 @@ export default function UsersContent({ slug, user, roles }) {
     // password: pageData?.password || "",
     avatar_url: pageData?.avatar_url || "",
   });
+  const [isPending, setIsPending] = useState(false);
 
   // Handle password and confirm password, and error state if there's a mismatch
   const [password, setPassword] = useState("");
@@ -90,15 +91,20 @@ export default function UsersContent({ slug, user, roles }) {
         }
 
         // Call the server action with the form data (image is now a URL)
-        let updatedData;
 
         clearTimeout(pageData?.published);
 
         if (pageData?.published) {
-          updatedData = await createUser(slug, formDataObj);
+          await createUser(slug, formDataObj);
         } else {
-          updatedData = await updateContent(slug, formDataObj);
+          await updateContent(slug, formDataObj);
         }
+
+        // Refetch updated data
+        const { data: updatedData } = await supabase
+          .from(slug)
+          .select("*")
+          .limit(1);
 
         if (!updatedData) {
           throw new Error("Failed to create/update content");
@@ -110,12 +116,22 @@ export default function UsersContent({ slug, user, roles }) {
         return pageData;
       }
     },
+    onMutate: () => {
+      // Set pending state
+      setIsPending(true);
+    },
     onSuccess: (updatedData) => {
-      // Only update if we got valid data
       if (updatedData) {
-        toast.success("Content updated successfully!");
+        // Set pending state
+        setTimeout(() => {
+          setIsPending(false);
+        }, 500);
 
+        // Update state with updated data
         setPageData(updatedData);
+
+        // Display message on successful update
+        toast.success("Content updated successfully!");
 
         queryClient.invalidateQueries({ queryKey: ["users", slug] });
 
@@ -180,7 +196,7 @@ export default function UsersContent({ slug, user, roles }) {
 
     // Set ID if editing an existing user
     // if (!pageData?.published && pageData?.id) {
-    formData.set("id", pageData.id);
+    formData.set("id", pageData?.id);
     // }
 
     updateMutation.mutate(formData);
@@ -339,9 +355,11 @@ export default function UsersContent({ slug, user, roles }) {
           {/* Form submit button */}
           <div className="w-full sm:w-96 mt-6  sm:mr-4">
             <SubmitButton
-              isPending={updateMutation.isPending}
+              key={isPending ? "pending" : "idle"}
+              type="submit"
+              isPending={isPending}
               pendingLabel="Updating..."
-              disabled={updateMutation.isPending}
+              btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950  hover:bg-accent-950 hover:border-primary-50"
             >
               {pageData?.published ? "Create User" : "Update User"}
             </SubmitButton>

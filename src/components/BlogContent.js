@@ -25,6 +25,7 @@ export default function BlogContent({ slug, blog }) {
   const fileInputRef = useRef({});
   const router = useRouter();
   const supabase = getSupabaseClient();
+  const [isPending, setIsPending] = useState(false);
 
   // Generate an excerpt from the blog post content
   function createExcerpt(text, maxLength = 150) {
@@ -85,12 +86,17 @@ export default function BlogContent({ slug, blog }) {
         }
 
         // Call the server action with the form data (image is now a URL)
-        let updatedData;
         if (pageData?.published) {
-          updatedData = await createContent(slug, formDataObj);
+          await createContent(slug, formDataObj);
         } else {
-          updatedData = await updateContent(slug, formDataObj);
+          await updateContent(slug, formDataObj);
         }
+
+        // Refetch updated data
+        const { data: updatedData } = await supabase
+          .from(slug)
+          .select("*")
+          .limit(1);
 
         return updatedData || pageData;
       } catch (error) {
@@ -98,12 +104,23 @@ export default function BlogContent({ slug, blog }) {
         return pageData;
       }
     },
+    onMutate: () => {
+      // Set pending state
+      setIsPending(true);
+    },
     onSuccess: (updatedData) => {
       // Only update if we got valid data
       if (updatedData) {
-        toast.success("Content updated successfully!");
+        // Set pending state
+        setTimeout(() => {
+          setIsPending(false);
+        }, 500);
 
+        // Update state with updated data
         setPageData(updatedData);
+
+        // Display message on successful update
+        toast.success("Content updated successfully!");
 
         queryClient.invalidateQueries({ queryKey: ["blog", slug] });
 
@@ -154,7 +171,7 @@ export default function BlogContent({ slug, blog }) {
     <div className="overflow-y-auto h-[calc(100vh-12rem)] px-4 pt-4 sm:p-6 scrollbar-thin scrollbar-thumb-gray-400">
       <BackButton />
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:mr-4">
-        <input type="hidden" name="id" value={pageData?.id} />
+        <input type="hidden" name="id" value={pageData?.id || ""} />
 
         {/* Blog Title */}
         <div className="flex flex-col gap-2 mb-2 mt-2">
@@ -223,9 +240,11 @@ export default function BlogContent({ slug, blog }) {
         {/* Form submit button */}
         <div className="w-full sm:w-96 mt-6 self-center sm:mr-4">
           <SubmitButton
-            isPending={updateMutation.isPending}
+            key={isPending ? "pending" : "idle"}
+            type="submit"
+            btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950  hover:bg-accent-950 hover:border-primary-50"
+            isPending={isPending}
             pendingLabel="Updating..."
-            disabled={updateMutation.isPending}
           >
             {pageData?.published ? "Create Blog" : "Update Blog"}
           </SubmitButton>
