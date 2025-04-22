@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Button from "./Button";
 
-export default function BlogList({ slug, initialData }) {
-  const [blogs, setBlogs] = useState(initialData || {});
+export default function BlogList({ slug, data }) {
+  const [blogs, setBlogs] = useState(data || {});
   const router = useRouter();
 
   const handleBlogClick = (blog) => {

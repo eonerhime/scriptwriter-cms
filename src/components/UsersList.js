@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Button from "./Button";
 
-export default function UsersList({ slug, initialData, roles }) {
-  const [users, setUsers] = useState(initialData || {});
+export default function UsersList({ slug, data, roles }) {
+  const [users, setUsers] = useState(data || {});
   const router = useRouter();
 
   const handleUserClick = (user) => {
@@ -20,7 +20,7 @@ export default function UsersList({ slug, initialData, roles }) {
     localStorage.setItem("usersRoles", JSON.stringify(roles));
 
     // Redirect to the blog creation page
-    router.push(`/users/${slug}`);
+    router.push(`/users/${user.id}`);
   };
 
   const handleCreateNewUser = () => {
@@ -55,11 +55,11 @@ export default function UsersList({ slug, initialData, roles }) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {users.map((user, index) => (
-          <div className="mb-8">
-            <div key={user?.id} className="w-full h-full">
-              <button
+          <div key={user?.id} className="mb-8">
+            <div className="w-full h-full">
+              <Button
                 onClick={() => handleUserClick(user)}
-                className="h-full w-full border-1 p-4 rounded-lg border-accent-950 cursor-pointer flex flex-col justify-between"
+                btnStyle="h-full w-full border-1 p-4 rounded-lg border-accent-950 cursor-pointer flex flex-col justify-between"
               >
                 {/* Hidden ID or marker */}
                 <input type="hidden" name={`id_${index}`} value={user?.id} />
@@ -100,7 +100,7 @@ export default function UsersList({ slug, initialData, roles }) {
                     {user.role}
                   </label>
                 </div>
-              </button>
+              </Button>
 
               {/* Delete Checkbox */}
               <div

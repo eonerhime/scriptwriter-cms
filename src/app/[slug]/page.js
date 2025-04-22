@@ -34,7 +34,5 @@ export default async function Page({ params }) {
   // Handle empty responses
   if (!data || !data.length) return notFound();
 
-  return (
-    <ContentEditor slug={resolvedSlug} initialData={data} roles={roles || []} />
-  );
+  return <ContentEditor slug={resolvedSlug} data={data} roles={roles || []} />;
 }
