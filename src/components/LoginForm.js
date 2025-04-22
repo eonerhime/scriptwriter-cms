@@ -22,7 +22,7 @@ export default function LoginForm() {
     } else if (!session || status !== "authenticated") {
       router.push("/login");
     }
-  }, [status, router]);
+  }, [session, status, router]);
 
   async function handleSubmit(e) {
     e.preventDefault();
