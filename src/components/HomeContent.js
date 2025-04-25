@@ -116,7 +116,7 @@ export default function HomeContent({ slug, data }) {
   };
 
   return (
-    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
+    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-0 sm:p-6 scrollbar-thin scrollbar-thumb-gray-400">
       {pageData && (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input type="hidden" name="id" value={pageData?.id || ""} />
@@ -132,7 +132,7 @@ export default function HomeContent({ slug, data }) {
                 id="coverHeader"
                 disabled={updateMutation.isPending}
                 defaultValue={pageData?.coverHeader}
-                className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                className="w-full p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
             <div className="flex flex-col gap-2 mb-4">
@@ -140,6 +140,11 @@ export default function HomeContent({ slug, data }) {
                 Sub Header
               </label>
               <textarea
+                onInput={(e) => {
+                  e.target.style.height = "auto";
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
+                rows={3}
                 name="coverSubHeader"
                 id="coverSubHeader"
                 disabled={updateMutation.isPending}
@@ -159,7 +164,7 @@ export default function HomeContent({ slug, data }) {
                 width={300}
                 height={300}
               />
-              <div className="w-4/12">
+              <div className="w-full sm:w-6/12">
                 <input
                   type="file"
                   accept="image/*"
@@ -223,7 +228,7 @@ export default function HomeContent({ slug, data }) {
                 width={300}
                 height={300}
               />
-              <div className="w-4/12">
+              <div className="w-full sm:w-6/12">
                 <input
                   type="file"
                   accept="image/*"
@@ -317,7 +322,7 @@ export default function HomeContent({ slug, data }) {
             <SubmitButton
               key={isPending ? "pending" : "idle"}
               type="submit"
-              btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950  hover:bg-accent-950 hover:border-primary-50"
+              btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950 hover:bg-accent-950 hover:border-primary-50"
               isPending={isPending}
               pendingLabel="Updating..."
             >

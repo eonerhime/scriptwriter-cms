@@ -98,7 +98,7 @@ export default function AboutContent({ slug, data }) {
   };
 
   return (
-    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
+    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-0 sm:p-6 scrollbar-thin scrollbar-thumb-gray-400">
       {pageData && (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input type="hidden" name="id" value={pageData?.id || ""} />
@@ -144,7 +144,7 @@ export default function AboutContent({ slug, data }) {
               width={300}
               height={300}
             />
-            <div className="w-6/12">
+            <div className="w-full sm:w-6/12">
               <input
                 type="file"
                 accept="image/*"

@@ -10,7 +10,7 @@ export default function Button({
   return (
     <button
       type={type}
-      // onClick={onClick}
+      onClick={onClick}
       className={`${btnStyle} ${
         loading || isPending
           ? "bg-gray-400 text-gray-900 cursor-not-allowed"

@@ -69,7 +69,7 @@ export default function ServicessContent({ slug, data }) {
   };
 
   return (
-    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
+    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-0 sm:p-6 scrollbar-thin scrollbar-thumb-gray-400">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {pageData?.map((item, index) => (
           <div key={item.id} className="mb-4">
