@@ -48,9 +48,15 @@ export default function UsersList({ slug, data, roles }) {
   };
 
   return (
-    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-6 scrollbar-thin scrollbar-thumb-gray-400">
+    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-0 sm:p-6 scrollbar-thin scrollbar-thumb-gray-400">
       <div className="w-fit mb-8">
-        <Button onClick={handleCreateNewUser}>Create New User</Button>
+        <Button
+          type="button"
+          onClick={handleCreateNewUser}
+          btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950 hover:bg-accent-950 hover:border-primary-50"
+        >
+          Create New User
+        </Button>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {users.map((user, index) => (
