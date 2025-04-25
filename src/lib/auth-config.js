@@ -9,6 +9,7 @@ export const authConfig = {
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
     CredentialsProvider({
+      id: "credentials",
       name: "Credentials",
       credentials: {
         email: {

@@ -16,8 +16,8 @@ function SessionHeaderCom() {
       {session.user.avatar_url && (
         <Image
           src={session.user.avatar_url}
-          width={50}
-          height={50}
+          width={30}
+          height={30}
           alt={session.user.avatar_url}
           referrerPolicy="no-referrer"
           className="rounded-full"

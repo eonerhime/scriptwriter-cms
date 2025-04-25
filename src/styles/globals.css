@@ -105,7 +105,10 @@ body {
 .border-accent-950 {
   border-color: var(--color-accent-950);
 }
-hover.border-primary-500:hover {
+.border-primary-950 {
+  border-color: var(--color-primary-950);
+}
+.border-primary-500:hover {
   border-color: var(--color-primary-500);
 }
 
