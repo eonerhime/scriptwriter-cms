@@ -11,7 +11,7 @@ async function Header() {
           <MobileMenu />
           <Logo />
         </div>
-        <div className="flex justify-center items-center gap-2 sm:gap-4">
+        <div className="flex justify-center items-center gap-3 sm:gap-5">
           <DarkModeSwitch />
           <SessionHeaderCom />
         </div>
