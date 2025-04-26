@@ -1,7 +1,7 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { getSupabaseClient } from "./getSupabaseClient";
+import { getSupabaseClient } from "../getSupabaseClient";
 
 export async function logout() {
   // Ensure Supabase connection is valid
