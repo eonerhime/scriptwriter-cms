@@ -2,7 +2,7 @@
 
 import { signOut } from "@/lib/auth";
 import { MdLogout } from "react-icons/md";
-import { refreshSession } from "@/actions/refreshSession";
+import { refreshSession } from "@/lib/actions/refreshSession";
 
 async function handleLogout() {
   try {

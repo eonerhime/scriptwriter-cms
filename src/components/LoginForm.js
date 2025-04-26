@@ -1,6 +1,6 @@
 "use client";
 
-import { refreshSession } from "@/actions/refreshSession";
+import { refreshSession } from "@/lib/actions/refreshSession";
 import { signIn } from "@/lib/auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";

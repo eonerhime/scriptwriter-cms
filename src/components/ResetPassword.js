@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { getSupabaseClient } from "@/lib/getSupabaseClient";
-import { updateUserPassword } from "@/lib/actions";
+import { updateUserPassword } from "@/lib/actions/actions";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
