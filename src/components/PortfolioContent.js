@@ -1,12 +1,12 @@
 "use client";
 
-import { updateMultipleRowsContent } from "@/lib/actions";
+import { updateMultipleRowsContent } from "@/lib/actions/actions";
+import { getSupabaseClient } from "@/lib/getSupabaseClient";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import SubmitButton from "./SubmitButton";
-import { getSupabaseClient } from "@/lib/getSupabaseClient";
 
 export default function PortfolioContent({ slug, data }) {
   const [pageData, setPageData] = useState(data);

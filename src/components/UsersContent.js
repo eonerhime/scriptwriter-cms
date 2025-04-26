@@ -1,6 +1,6 @@
 "use client";
 
-import { createUser, updateContent } from "@/lib/actions";
+import { createUser, updateContent } from "@/lib/actions/actions";
 import { getSupabaseClient } from "@/lib/getSupabaseClient";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import Image from "next/image";
