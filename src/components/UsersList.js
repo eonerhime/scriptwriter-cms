@@ -53,7 +53,7 @@ export default function UsersList({ slug, data, roles }) {
         <Button
           type="button"
           onClick={handleCreateNewUser}
-          btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950 hover:bg-accent-950 hover:border-primary-50"
+          btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2"
         >
           Create New User
         </Button>
@@ -62,9 +62,9 @@ export default function UsersList({ slug, data, roles }) {
         {users.map((user, index) => (
           <div key={user?.id} className="mb-8">
             <div className="w-full h-full">
-              <Button
+              <button
                 onClick={() => handleUserClick(user)}
-                btnStyle="h-full w-full border-1 p-4 rounded-lg border-accent-950 cursor-pointer flex flex-col justify-between"
+                className="h-full w-full border-1 p-4 rounded-lg border-accent-950 cursor-pointer flex flex-col justify-between"
               >
                 {/* Hidden ID or marker */}
                 <input type="hidden" name={`id_${index}`} value={user?.id} />
@@ -105,7 +105,7 @@ export default function UsersList({ slug, data, roles }) {
                     {user.role}
                   </label>
                 </div>
-              </Button>
+              </button>
 
               {/* Delete Checkbox */}
               <div

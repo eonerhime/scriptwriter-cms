@@ -14,7 +14,7 @@ export default function Button({
       className={`${btnStyle} ${
         loading || isPending
           ? "bg-gray-400 text-gray-900 cursor-not-allowed"
-          : ""
+          : "bg-accent-950 hover:bg-accent-950 hover:border-primary-50"
       }`}
       disabled={isPending || loading}
     >

@@ -309,6 +309,8 @@ export default function UsersContent({ slug, user, roles }) {
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "right 0.75rem center",
                 backgroundSize: "1.25rem",
+                WebkitAppearance: "none",
+                MozAppearance: "none",
               }}
             >
               {user.published && <option value="">-- Select a Role --</option>}
