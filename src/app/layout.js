@@ -21,6 +21,9 @@ export const metadata = {
     default: "Welcome - Ifeoma Emo-Onerhime",
   },
   description: "Content Management System for Ifeoma's website.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export const dynamic = "force-dynamic";
