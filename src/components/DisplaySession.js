@@ -3,7 +3,8 @@
 import { useSession } from "next-auth/react";
 
 function DisplaySession() {
-  const { fullName, role } = useSession()?.data?.user;
+  const { data: session } = useSession();
+  const { fullName, role } = session?.user;
 
   console.log("SESSION:", fullName, role);
 
