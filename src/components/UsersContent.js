@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import BackButton from "./BackButton";
 import SubmitButton from "./SubmitButton";
+import CustomSelect from "./CustomSelect";
 
 export default function UsersContent({ slug, user, roles }) {
   const [imageFile, setImageFile] = useState({});
@@ -44,6 +45,7 @@ export default function UsersContent({ slug, user, roles }) {
   const supabase = getSupabaseClient();
   const { data: session } = useSession();
   const [notAuthorized, setNotAuthorized] = useState(false);
+  const [limitedActions, setLimitedActions] = useState(false);
 
   useEffect(() => {
     if (!session?.user) return; // wait until session is loaded
@@ -53,10 +55,13 @@ export default function UsersContent({ slug, user, roles }) {
 
     if (userRole === "super admin" || userRole === "admin") {
       setNotAuthorized(false); // Authorized by role
+      setLimitedActions(false);
     } else if (userId === user.id) {
       setNotAuthorized(false); // Authorized because viewing own profile
+      setLimitedActions(true); // Limted in what can be updated: username and profile pic only
     } else {
       setNotAuthorized(true); // Not authorized
+      setLimitedActions(true);
     }
   }, [session, user]);
 
@@ -258,7 +263,7 @@ export default function UsersContent({ slug, user, roles }) {
               name="email"
               id="email"
               onChange={handleInputChange}
-              disabled={updateMutation.isPending}
+              disabled={limitedActions}
               defaultValue={pageData?.email || ""}
               className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               required={user.published}
@@ -309,36 +314,14 @@ export default function UsersContent({ slug, user, roles }) {
           )}
 
           {/* User Role */}
-          <div className="flex flex-col gap-2 mb-3 w-6/12">
-            <label htmlFor="role" className="text-sm font-semibold">
-              Set User Role
-            </label>
-            <select
-              name="role"
-              id="role"
-              required={user.published}
-              value={pageData?.role ?? ""}
-              onChange={(e) => {
-                setPageData((prev) => ({ ...prev, role: e.target.value }));
-              }}
-              className="w-64 h-12 pl-4 pr-10 text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 border  rounded-md focus:outline-none focus:ring-2 focus:ring-white cursor-pointer hover:bg-primary-400 capitalize appearance-none"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E")`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right 0.75rem center",
-                backgroundSize: "1.25rem",
-                WebkitAppearance: "none",
-                MozAppearance: "none",
-              }}
-            >
-              {user.published && <option value="">-- Select a Role --</option>}
-              {Array.isArray(userRoles) &&
-                userRoles.map((userRole) => (
-                  <option key={userRole.id} value={userRole.role}>
-                    {userRole.role}
-                  </option>
-                ))}
-            </select>
+          <div className="flex flex-col gap-2 mb-3 w-full sm:w-6/12">
+            <CustomSelect
+              userRoles={userRoles}
+              pageData={pageData}
+              setPageData={setPageData}
+              limitedActions={limitedActions}
+              userPublished={user.published}
+            />
           </div>
 
           {/* User Avatar */}
