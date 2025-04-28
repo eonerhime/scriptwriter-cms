@@ -6,7 +6,9 @@ import { usePathname } from "next/navigation";
 
 export function SideBarItems({ initialPathname }) {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const {
+    data: { user },
+  } = useSession();
 
   let currentPathname = initialPathname === "home" ? initialPathname : pathname;
 
@@ -32,7 +34,7 @@ export function SideBarItems({ initialPathname }) {
 
   return (
     <>
-      {session?.user && (
+      {user && (
         <div className="hidden min-[601px]:flex flex-col border-r mt-8 ml-6 md:ml-12 pr-4">
           <ul className="mb-4">
             {editAreas.map((area) => (
