@@ -209,7 +209,7 @@ export default function UsersContent({ slug, user, roles }) {
   };
 
   return (
-    <div className="overflow-y-auto h-[calc(100vh-12rem)] px-4 pt-24 sm:p-8 scrollbar-thin scrollbar-thumb-gray-400 ">
+    <div className="overflow-y-auto h-[calc(100vh-12rem)] p-0 sm:p-6 mt-2 scrollbar-thin scrollbar-thumb-gray-400">
       <div className="border-1 p-4 rounded-lg border-accent-950 w-[640px] px-4 sm:px-10 max-w-screen-lg mx-auto">
         <BackButton />
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

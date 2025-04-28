@@ -1,13 +1,27 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
 
 export default function UsersList({ slug, data, roles }) {
   const [users, setUsers] = useState(data || {});
   const router = useRouter();
+  const { data: session } = useSession();
+  const [notAdmin, setNotAdmin] = useState(false);
+
+  useEffect(() => {
+    if (
+      session?.user?.role !== "super admin" &&
+      session?.user?.role !== "admin"
+    ) {
+      setNotAdmin(true);
+    } else {
+      setNotAdmin(false);
+    }
+  }, [session]);
 
   const handleUserClick = (user) => {
     if (!slug) {
@@ -52,6 +66,7 @@ export default function UsersList({ slug, data, roles }) {
       <div className="w-fit mb-8">
         <Button
           type="button"
+          role={notAdmin}
           onClick={handleCreateNewUser}
           btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2"
         >

@@ -2,12 +2,27 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
+import { useSession } from "next-auth/react";
 
 export default function BlogList({ slug, data }) {
   const [blogs, setBlogs] = useState(data || {});
   const router = useRouter();
+  const { data: session } = useSession();
+  const [notAdmin, setNotAdmin] = useState(false);
+
+  useEffect(() => {
+    if (
+      session?.user?.role !== "super admin" &&
+      session?.user?.role !== "admin" &&
+      session?.user?.role !== "creator"
+    ) {
+      setNotAdmin(true);
+    } else {
+      setNotAdmin(false);
+    }
+  }, [session]);
 
   const handleBlogClick = (blog) => {
     if (!slug) {
@@ -50,8 +65,9 @@ export default function BlogList({ slug, data }) {
       <div className="w-fit mb-4 ">
         <Button
           type="button"
+          role={notAdmin}
           onClick={handleCreateNewBlog}
-          btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950 hover:bg-accent-950 hover:border-primary-50"
+          btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2"
         >
           Create New Blog Post
         </Button>

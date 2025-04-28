@@ -1,5 +1,6 @@
 export default function Button({
   type,
+  role,
   onClick,
   btnStyle,
   loading,
@@ -12,11 +13,11 @@ export default function Button({
       type={type}
       onClick={onClick}
       className={`${btnStyle} ${
-        loading || isPending
+        loading || isPending || role
           ? "bg-gray-400 text-gray-900 cursor-not-allowed"
           : "bg-accent-950 hover:bg-accent-950 hover:border-primary-50"
       }`}
-      disabled={isPending || loading}
+      disabled={isPending || loading || role}
     >
       {isPending ? (
         <div className="flex items-center justify-center gap-2">
