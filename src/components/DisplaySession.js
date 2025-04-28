@@ -4,16 +4,15 @@ import { useSession } from "next-auth/react";
 
 function DisplaySession() {
   const { data: session } = useSession();
-  const { fullName, role } = session?.user;
-
-  console.log("SESSION:", fullName, role);
+  // const { fullName, role } = session?.user;
 
   return (
     <div className="mt-6">
       <h2 className="font-bold">
-        Logged-in user: <span className="text-accent-950">{fullName} </span>|{" "}
+        Logged-in user:{" "}
+        <span className="text-accent-950">{session?.user?.fullName} </span>|{" "}
         Role:{" "}
-        {role
+        {session?.user?.role
           .split(" ")
           .map((item) => {
             return item.slice(0, 1).toUpperCase() + item.slice(1);

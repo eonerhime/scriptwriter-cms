@@ -10,16 +10,16 @@ export default function UsersList({ slug, data, roles }) {
   const [users, setUsers] = useState(data || {});
   const router = useRouter();
   const { data: session } = useSession();
-  const [notAdmin, setNotAdmin] = useState(false);
+  const [notAuthorized, setNotAuthorized] = useState(false);
 
   useEffect(() => {
     if (
       session?.user?.role !== "super admin" &&
       session?.user?.role !== "admin"
     ) {
-      setNotAdmin(true);
+      setNotAuthorized(true);
     } else {
-      setNotAdmin(false);
+      setNotAuthorized(false);
     }
   }, [session]);
 
@@ -28,6 +28,9 @@ export default function UsersList({ slug, data, roles }) {
       console.error("Missing slug passed to UsersList");
       return;
     }
+
+    console.log("USER", user);
+
     // This is a workaround for the server action not being able to access local storage directly
     // Store the selected user and roles in local storage for later use
     localStorage.setItem("selectedUser", JSON.stringify(user));
@@ -66,7 +69,7 @@ export default function UsersList({ slug, data, roles }) {
       <div className="w-fit mb-8">
         <Button
           type="button"
-          role={notAdmin}
+          role={notAuthorized}
           onClick={handleCreateNewUser}
           btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2"
         >

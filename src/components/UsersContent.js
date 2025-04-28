@@ -3,9 +3,10 @@
 import { createUser, updateContent } from "@/lib/actions/actions";
 import { getSupabaseClient } from "@/lib/getSupabaseClient";
 import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import BackButton from "./BackButton";
 import SubmitButton from "./SubmitButton";
@@ -41,6 +42,23 @@ export default function UsersContent({ slug, user, roles }) {
   const fileInputRef = useRef({});
   const router = useRouter();
   const supabase = getSupabaseClient();
+  const { data: session } = useSession();
+  const [notAuthorized, setNotAuthorized] = useState(false);
+
+  useEffect(() => {
+    if (!session?.user) return; // wait until session is loaded
+
+    const userRole = session.user.role;
+    const userId = session.user.id;
+
+    if (userRole === "super admin" || userRole === "admin") {
+      setNotAuthorized(false); // Authorized by role
+    } else if (userId === user.id) {
+      setNotAuthorized(false); // Authorized because viewing own profile
+    } else {
+      setNotAuthorized(true); // Not authorized
+    }
+  }, [session, user]);
 
   const updateMutation = useMutation({
     mutationFn: async (formData) => {
@@ -291,7 +309,7 @@ export default function UsersContent({ slug, user, roles }) {
           )}
 
           {/* User Role */}
-          <div className="flex flex-col gap-2 mb-3 w-full">
+          <div className="flex flex-col gap-2 mb-3 w-6/12">
             <label htmlFor="role" className="text-sm font-semibold">
               Set User Role
             </label>
@@ -365,9 +383,10 @@ export default function UsersContent({ slug, user, roles }) {
             <SubmitButton
               key={isPending ? "pending" : "idle"}
               type="submit"
+              role={notAuthorized}
               isPending={isPending}
               pendingLabel="Updating..."
-              btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2 bg-accent-950  hover:bg-accent-950 hover:border-primary-50"
+              btnStyle="mt-4 h-12 font-bold rounded w-full transition-colors cursor-pointer px-4 py-2"
             >
               {pageData?.published ? "Create User" : "Update User"}
             </SubmitButton>

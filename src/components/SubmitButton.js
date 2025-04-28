@@ -4,18 +4,23 @@ import Button from "./Button";
 
 export default function SubmitButton({
   type,
+  role,
   btnStyle,
   isPending,
   pendingLabel,
   children,
 }) {
+  console.log("ROLE: SUBMIT BTN", role);
+
   return (
     <button
       type={type}
       className={`${btnStyle} ${
-        isPending ? "bg-gray-400 text-gray-900 cursor-not-allowed" : ""
+        isPending || role
+          ? "bg-gray-400 text-gray-900 cursor-not-allowed"
+          : "bg-accent-950 hover:bg-accent-950 hover:border-primary-50"
       }`}
-      disabled={isPending}
+      disabled={isPending || role}
     >
       {isPending ? (
         <div className="flex items-center justify-center gap-2">
