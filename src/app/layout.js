@@ -43,7 +43,7 @@ export default async function RootLayout({ children }) {
               <Header />
               {/* There's an active user session */}
               {session ? (
-                <main session={session} className="flex w-full">
+                <main className="flex w-full">
                   <SideBar />
                   <div className="max-w-6xl w-full">{children}</div>
                 </main>
