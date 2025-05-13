@@ -1,7 +1,5 @@
 "use client";
 
-import Button from "./Button";
-
 export default function SubmitButton({
   type,
   role,
@@ -10,8 +8,6 @@ export default function SubmitButton({
   pendingLabel,
   children,
 }) {
-  console.log("ROLE: SUBMIT BTN", role);
-
   return (
     <button
       type={type}
