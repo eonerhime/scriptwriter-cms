@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import favLogo from "../../public/favLogo.ico";
+import favLogo from "../../public/favLogo.png";
 import { useSession } from "next-auth/react";
 
 function Logo() {
