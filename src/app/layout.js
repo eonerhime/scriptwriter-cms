@@ -22,7 +22,8 @@ export const metadata = {
   },
   description: "Content Management System for Ifeoma's website.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favLogo.png",
+    icon: [{ url: "/favLogo.png", type: "image/png" }],
   },
 };
 
